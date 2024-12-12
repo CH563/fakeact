@@ -3,19 +3,20 @@ import runModule from './modules/index.js';
 import { getRandomItem } from './utils/helpers.js'
 
 const program = new Command();
+const modulelists = Object.keys(runModule);
 
 program
-    .name('Fakeact')
-    .description('一个假装在执行任务的命令行工具')
-    .option('-m, --modules <modules>', '指定要运行的模块', 'all')
-    .option('-s, --speed-factor <factor>', '速度因子', '1')
-    .option('--exit-after-time <time>', '指定运行时间后退出')
+    .name('fakeact')
+    .description('A command line fake active tool')
+    .option('-m, --modules <modules>', `run only these modules ${JSON.stringify(modulelists)}`, 'all')
+    .option('-s, --speed-factor <factor>', 'global speed factor', '1')
+    .option('--exit-after-time <time>', 'exit after specified running time (ms)')
     .parse();
 
 
 console.log(program.opts());
 const { modules, speedFactor, exitAfterTime } = program.opts();
-const modulelists = Object.keys(runModule);
+
 let name = modules;
 if (!modulelists.includes(name)) name = getRandomItem(modulelists);
 

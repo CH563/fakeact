@@ -46,31 +46,29 @@ async function bootlog(speedFactor = 1, config?: AppConfig) {
         // 创建spinner
         const spinner = ora();
         
-        // 1%概率出现错误信息
-        const isError = Math.random() < 0.01;
-        if (isError) {
-            spinner.text = chalk.red(`ERROR: ${choice}`);
-        } else {
-            // 10%概率第一个词加粗
-            const hasBoldWord = Math.random() < 0.1;
-            if (hasBoldWord) {
-                const words = choice.split(' ');
-                words[0] = chalk.bold(words[0]);
-                spinner.text = words.join(' ');
-            } else {
-                spinner.text = choice;
-            }
-        }
-
         // 显示日志行
         spinner.start();
-        
+        let str = choice;
+        let firstWords = '';
+
+        // 10%概率第一个词加粗
+        const hasBoldWord = Math.random() < 0.1;
+        if (hasBoldWord) {
+            const words = choice.split(' ');
+            firstWords = chalk.bold(words.shift()) + ' ';
+            str = words.join(' ');
+        }
+        // 1%概率出现错误信息
+        const isError = Math.random() < 0.01;
         // 模拟打字效果
-        if (charSleepLength > 0) {
-            for (let j = 0; j < choice.length; j++) {
-                await sleep(charSleepLength * speedFactor);
+        for (let j = 0; j < str.length; j++) {
+            const txt = str.substring(0, j + 1);
+            spinner.text = `${firstWords}${isError ? chalk.red(`ERROR: ${txt}`) : txt}`;
+            if (charSleepLength > 0) {
+                await sleep(charSleepLength / speedFactor);
             }
         }
+        
         
         spinner.stop();
         console.log(spinner.text);

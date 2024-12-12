@@ -7,8 +7,33 @@
 
 🐟模拟各种下载安装编辑的日志实时输出，假装很忙，摸鱼不慌张
 
+运行后，只是模拟日志输出，*不会处理或安装任何数据*，让命令行输出看起来很专业和处于忙碌状态
 
-# 支持模拟运行模块
+![](gifs/cc.gif)
+
+## 安装
+
+```bash
+npm install fakeact -g
+```
+
+### 使用
+
+    A command line fake active tool
+
+    Usage: fakeact [OPTIONS]
+
+    Options:
+      -l, --list-modules                               list available modules
+      -m, --modules <MODULES>                          run only these modules [possible values: ansible, bootlog, botnet, bruteforce, cargo, cc,
+                                                       composer, cryptomining, docker_build, docker_image_rm, download, julia, kernel_compile, memdump,
+                                                       mkinitcpio, rkhunter, simcity, terraform, weblog] (default: "all")
+      -s, --speed-factor <SPEED_FACTOR>                global speed factor (default: "1")
+      -h, --help                                       display help for command
+      -v, --version                                    display version
+
+
+## 支持模拟运行模块
 
 - [x] ansible - 模拟Ansible部署日志
 - [x] bootlog - 模拟系统启动日志
@@ -29,3 +54,5 @@
 - [ ] simcity - 模拟SimCity游戏日志
 - [ ] terraform - 模拟Terraform部署日志
 - [ ] weblog - 模拟Web服务器访问日志
+
+
