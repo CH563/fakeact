@@ -1,18 +1,24 @@
 {
   "name": "fakeact",
   "version": "1.0.0",
-  "description": "",
+  "description": "🐟命令行摸鱼神器，模拟各种下载安装编辑的日志实时输出，假装很忙，摸鱼不慌张",
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "build": "tsc && node dist/index.js",
+    "build": "tsc && node dist/index.js -m bootlog",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": ["cli", "fakeact", "fake"],
   "author": "Liwen chen",
   "engines": {
     "node": ">=16.20.2"
   },
+  "files": [
+    "dist",
+    "data",
+    "license",
+    "README.md"
+  ],
   "license": "ISC",
   "dependencies": {
     "chalk": "^5.3.0",

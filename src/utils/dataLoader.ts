@@ -10,7 +10,7 @@ export const DATA_FILES: { [key: string]: string[] | null } = {
     bootlog: null,
     cfiles: null,
     packages: null,
-    composers: null,
+    composer: null,
     simcity: null,
     boot_hooks: null,
     os_releases: null,

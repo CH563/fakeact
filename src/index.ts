@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import runModule from './modules/index.js';
+import { getRandomItem } from './utils/helpers.js'
 
 const program = new Command();
 
@@ -11,6 +12,11 @@ program
     .option('--exit-after-time <time>', '指定运行时间后退出')
     .parse();
 
-console.log(program.opts());
 
-runModule.download();
+console.log(program.opts());
+const { modules, speedFactor, exitAfterTime } = program.opts();
+const modulelists = Object.keys(runModule);
+let name = modules;
+if (!modulelists.includes(name)) name = getRandomItem(modulelists);
+
+runModule[name](Number(speedFactor));
