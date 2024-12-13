@@ -1,9 +1,9 @@
 # Fakeact - 命令行摸鱼神器
 
-[![license](http://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/CH563/fakeact/blob/main/LICENSE)
 [![Stars](https://img.shields.io/github/stars/CH563/fakeact.svg)](https://github.com/CH563/fakeact/stargazers)
-[![npm](https://img.shields.io/npm/v/fakeact.svg?style=flat-square)](https://www.npmjs.com/package/fakeact) 
-[![npm downloads](https://img.shields.io/npm/dm/fakeact?color=blue&label=npm%20downloads&style=flat-square)](https://www.npmjs.com/package/fakeact)
+[![npm](https://img.shields.io/npm/v/fakeact.svg)](https://www.npmjs.com/package/fakeact) 
+[![npm downloads](https://img.shields.io/npm/dm/fakeact?color=blue&label=npm%20downloads)](https://www.npmjs.com/package/fakeact)
+[![license](http://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/CH563/fakeact/blob/main/LICENSE)
 
 > 参考Rust版 [Genact](https://github.com/svenstaro/genact) 实现，日志数据也来源于该项目
 
@@ -50,9 +50,9 @@ npm install fakeact -g
 
 - [x] ansible - 模拟Ansible部署日志
 - [x] bootlog - 模拟系统启动日志
-- [ ] botnet - 模拟僵尸网络活动日志
-- [ ] bruteforce - 模拟暴力破解日志
-- [ ] cargo - 模拟Rust Cargo构建日志
+- [x] botnet - 模拟僵尸网络活动日志
+- [x] bruteforce - 模拟暴力破解日志
+- [x] cargo - 模拟Rust Cargo构建日志
 - [ ] cc - 模拟C/C++编译日志
 - [x] composer - 模拟PHP Composer安装日志
 - [ ] cryptomining - 模拟加密货币挖矿日志
