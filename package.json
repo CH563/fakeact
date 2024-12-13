@@ -1,6 +1,6 @@
 {
   "name": "fakeact",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "🐟命令行摸鱼神器，模拟各种下载安装编辑的日志实时输出，假装很忙，摸鱼不慌张",
   "main": "dist/index.js",
   "bin": {
@@ -14,7 +14,7 @@
   "keywords": ["cli", "fakeact", "fake"],
   "author": "Liwen chen",
   "engines": {
-    "node": ">=16.20.2"
+    "node": ">=18"
   },
   "files": [
     "dist",
@@ -22,7 +22,15 @@
     "license",
     "README.md"
   ],
-  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CH563/fakeact.git"
+  },
+  "bugs": {
+    "url": "https://github.com/CH563/fakeact/issues"
+  },
+  "homepage": "https://github.com/CH563/fakeact",
+  "license": "MIT",
   "dependencies": {
     "chalk": "^5.3.0",
     "commander": "^12.1.0",

@@ -11,11 +11,22 @@
 
 ![](https://github.com/CH563/fakeact/blob/main/gifs/cc.gif)
 
-## 安装
+
+### 按需运行
+
+使用“npx”你可以运行该脚本而无需先安装它：
+
+```bash
+npx fakeact
+```
+
+### 全局安装
 
 ```bash
 npm install fakeact -g
 ```
+
+全局安装 `fakeact` ，可以直接运行 fakeact 使用
 
 ### 使用
 
@@ -26,14 +37,14 @@ npm install fakeact -g
     Options:
       -l, --list                                       list available modules
       -m, --modules <MODULES>                          run only these modules [possible values: ansible, bootlog, botnet, bruteforce, cargo, cc,
-                                                       composer, cryptomining, docker_build, docker_image_rm, download, julia, kernel_compile, memdump,
+                                                       composer, cryptomining, dockerBuild, dockerImageRm, download, julia, kernelCompile, memdump,
                                                        mkinitcpio, rkhunter, simcity, terraform, weblog] (default: "all")
       -s, --speed-factor <SPEED_FACTOR>                global speed factor (default: "1")
       -h, --help                                       display help for command
       -V, --version                                    display version
 
 
-## 支持模拟运行模块
+### 支持模拟运行模块
 
 - [x] ansible - 模拟Ansible部署日志
 - [x] bootlog - 模拟系统启动日志
@@ -43,11 +54,11 @@ npm install fakeact -g
 - [ ] cc - 模拟C/C++编译日志
 - [x] composer - 模拟PHP Composer安装日志
 - [ ] cryptomining - 模拟加密货币挖矿日志
-- [x] docker_build - 模拟Docker构建日志
-- [ ] docker_image_rm - 模拟Docker镜像删除日志
+- [x] dockerBuild - 模拟Docker构建日志
+- [ ] dockerImageRm - 模拟Docker镜像删除日志
 - [x] download - 模拟文件下载日志
 - [ ] julia - 模拟Julia包管理器日志
-- [ ] kernel_compile - 模拟内核编译日志
+- [ ] kernelCompile - 模拟内核编译日志
 - [ ] memdump - 模拟内存转储日志
 - [ ] mkinitcpio - 模拟initramfs生成日志
 - [ ] rkhunter - 模拟rootkit扫描日志
