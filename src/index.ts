@@ -1,3 +1,5 @@
+#!/usr/bin/env node --experimental-modules
+
 import { Command } from 'commander';
 import runModule from './modules/index.js';
 import { getRandomItem } from './utils/helpers.js';
@@ -12,7 +14,7 @@ program
     .option('-m, --modules <modules>', `run only these modules ${JSON.stringify(modulelists)}`, 'all')
     .option('-s, --speed-factor <factor>', 'global speed factor', '1')
     .option('--exit-after-time <time>', 'exit after specified running time (ms)')
-    .version('1.0.2')
+    .version('1.0.3')
     .parse();
 
 

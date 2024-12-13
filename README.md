@@ -2,19 +2,21 @@
 
 [![license](http://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/CH563/fakeact/blob/main/LICENSE)
 [![Stars](https://img.shields.io/github/stars/CH563/fakeact.svg)](https://github.com/CH563/fakeact/stargazers)
+[![npm](https://img.shields.io/npm/v/fakeact.svg?style=flat-square)](https://www.npmjs.com/package/fakeact) 
+[![npm downloads](https://img.shields.io/npm/dm/fakeact?color=blue&label=npm%20downloads&style=flat-square)](https://www.npmjs.com/package/fakeact)
 
 > 参考Rust版 [Genact](https://github.com/svenstaro/genact) 实现，日志数据也来源于该项目
 
-🐟模拟各种下载安装编辑的日志实时输出，假装很忙，摸鱼不慌张
+🐟模拟各种下载安装编译的日志实时输出，假装很忙，摸鱼不慌张
 
-运行后，只是模拟日志输出，**不会处理或安装任何数据**，让命令行输出看起来很专业和处于忙碌状态
+运行后，只是模拟日志打印输出，**不会处理或安装任何数据**，让命令行输出看起来很专业和处于忙碌状态
 
 ![](https://github.com/CH563/fakeact/blob/main/gifs/cc.gif)
 
 
 ### 按需运行
 
-使用“npx”你可以运行该脚本而无需先安装它：
+使用 `npx` 运行该脚本而无需先安装：
 
 ```bash
 npx fakeact
@@ -66,4 +68,6 @@ npm install fakeact -g
 - [ ] terraform - 模拟Terraform部署日志
 - [ ] weblog - 模拟Web服务器访问日志
 
+## License
 
+Fakeact is licensed under the [MIT License](https://github.com/CH563/fakeact/blob/main/LICENSE).
