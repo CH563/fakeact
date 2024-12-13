@@ -1,11 +1,14 @@
 {
   "name": "fakeact",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "🐟命令行摸鱼神器，模拟各种下载安装编辑的日志实时输出，假装很忙，摸鱼不慌张",
   "main": "dist/index.js",
+  "bin": {
+    "fakeact": "dist/index.js"
+  },
   "type": "module",
   "scripts": {
-    "build": "tsc && node dist/index.js -m bootlog",
+    "build": "tsc && node dist/index.js -m ansible",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": ["cli", "fakeact", "fake"],

@@ -7,9 +7,9 @@
 
 🐟模拟各种下载安装编辑的日志实时输出，假装很忙，摸鱼不慌张
 
-运行后，只是模拟日志输出，*不会处理或安装任何数据*，让命令行输出看起来很专业和处于忙碌状态
+运行后，只是模拟日志输出，**不会处理或安装任何数据**，让命令行输出看起来很专业和处于忙碌状态
 
-![](gifs/cc.gif)
+![](https://github.com/CH563/fakeact/blob/main/gifs/cc.gif)
 
 ## 安装
 
@@ -24,13 +24,13 @@ npm install fakeact -g
     Usage: fakeact [OPTIONS]
 
     Options:
-      -l, --list-modules                               list available modules
+      -l, --list                                       list available modules
       -m, --modules <MODULES>                          run only these modules [possible values: ansible, bootlog, botnet, bruteforce, cargo, cc,
                                                        composer, cryptomining, docker_build, docker_image_rm, download, julia, kernel_compile, memdump,
                                                        mkinitcpio, rkhunter, simcity, terraform, weblog] (default: "all")
       -s, --speed-factor <SPEED_FACTOR>                global speed factor (default: "1")
       -h, --help                                       display help for command
-      -v, --version                                    display version
+      -V, --version                                    display version
 
 
 ## 支持模拟运行模块
