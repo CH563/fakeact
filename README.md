@@ -53,11 +53,11 @@ npm install fakeact -g
 - [x] botnet - 模拟僵尸网络活动日志
 - [x] bruteforce - 模拟暴力破解日志
 - [x] cargo - 模拟Rust Cargo构建日志
-- [ ] cc - 模拟C/C++编译日志
+- [x] cc - 模拟C/C++编译日志
 - [x] composer - 模拟PHP Composer安装日志
-- [ ] cryptomining - 模拟加密货币挖矿日志
+- [x] cryptomining - 模拟加密货币挖矿日志
 - [x] dockerBuild - 模拟Docker构建日志
-- [ ] dockerImageRm - 模拟Docker镜像删除日志
+- [x] dockerImageRm - 模拟Docker镜像删除日志
 - [x] download - 模拟文件下载日志
 - [ ] julia - 模拟Julia包管理器日志
 - [ ] kernelCompile - 模拟内核编译日志
