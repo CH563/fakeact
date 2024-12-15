@@ -13,7 +13,7 @@
 
 ![](https://github.com/CH563/fakeact/blob/main/gifs/download.gif)
 ![](https://github.com/CH563/fakeact/blob/main/gifs/composer.gif)
-![](https://github.com/CH563/fakeact/blob/main/gifs/cc.gif)
+<!-- ![](https://github.com/CH563/fakeact/blob/main/gifs/cc.gif) -->
 
 
 ### 按需运行
