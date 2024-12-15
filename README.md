@@ -11,6 +11,8 @@
 
 运行后，只是模拟日志打印输出，**不会处理或安装任何数据**，让命令行输出看起来很专业和处于忙碌状态
 
+![](https://github.com/CH563/fakeact/blob/main/gifs/download.gif)
+![](https://github.com/CH563/fakeact/blob/main/gifs/composer.gif)
 ![](https://github.com/CH563/fakeact/blob/main/gifs/cc.gif)
 
 
