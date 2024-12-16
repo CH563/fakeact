@@ -67,8 +67,8 @@ npm install fakeact -g
 - [ ] mkinitcpio - 模拟initramfs生成日志
 - [ ] rkhunter - 模拟rootkit扫描日志
 - [ ] simcity - 模拟SimCity游戏日志
-- [ ] terraform - 模拟Terraform部署日志
-- [ ] weblog - 模拟Web服务器访问日志
+- [x] terraform - 模拟Terraform部署日志
+- [x] weblog - 模拟Web服务器访问日志
 
 ## License
 

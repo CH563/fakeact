@@ -9,6 +9,9 @@ import bruteforce from './bruteforce.js';
 import cargo from './cargo.js';
 import cc from './cc.js';
 import cryptomining from './cryptomining.js';
+import weblog from './weblog.js';
+import terraform from './terraform.js';
+import julia from './julia.js';
 
 export default {
     download,
@@ -21,5 +24,8 @@ export default {
     bruteforce,
     cargo,
     cc,
-    cryptomining
+    cryptomining,
+    weblog,
+    terraform,
+    julia
 };

@@ -1,9 +1,16 @@
-import fs from 'fs/promises';
+import fs from 'fs';
 import path from 'path';
+import csv from 'csv-parser';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+interface CSVFILE {
+    name: string;
+    id: string;
+    versions: string[];
+}
 
 // 枚举data目录下的所有文件名和对应的缓存变量值，对应数据类型: string[] | null
 export const DATA_FILES: { [key: string]: string[] | null } = {
@@ -21,17 +28,21 @@ export const DATA_FILES: { [key: string]: string[] | null } = {
     rkhunter_checks: null,
     rkhunter_rootkits: null,
     rkhunter_tasks: null,
-    julia_packages: null,
+    
     terraform_aws_resources: null,
     terraform_azure_resources: null,
     terraform_gcp_resources: null,
     terraform_ids: null,
 };
 
+export const DATA_CSV: { [key: string]: CSVFILE[] | null } = {
+    julia: null
+};
+
 async function loadDataFile(filename: string): Promise<string[]> {
     try {
         const filePath = path.join(__dirname, '../..', 'data', filename);
-        const content = await fs.readFile(filePath, 'utf8');
+        const content = await fs.promises.readFile(filePath, 'utf8');
         return content
             .trim()
             .split('\n')
@@ -40,7 +51,38 @@ async function loadDataFile(filename: string): Promise<string[]> {
         console.error(`Error loading ${filename}:`, error.message);
         return [];
     }
+};
+
+const getVersions = (data: any) => {
+    const versions = [];
+    Object.keys(data).map(key => {
+        if (key !== 'AAindex' && key !== '1cd36ffe') {
+            versions.push(data[key])
+        }
+        return key;
+    });
+    return versions;
 }
+
+const loadCsvFile = (filename: string): Promise<CSVFILE[]> => new Promise((resolve, reject) => {
+    const results: CSVFILE[] = [];
+    const filePath = path.join(__dirname, '../..', 'data', filename);
+    fs.createReadStream(filePath)
+        .pipe(csv()).on('data', (data) => {
+            results.push({
+                name: data['AAindex'] || 'Revise',
+                id: data['1cd36ffe'] || '295af30f',
+                versions: getVersions(data),
+            });
+    })
+    .on('end', () => {
+        resolve(results);
+    })
+    .on('error', (error) => {
+        console.error('Error reading CSV file:', error);
+        resolve(results);
+    });
+})
 
 export async function loadData(name: string): Promise<string[]> {
     const data = DATA_FILES[name];
@@ -48,6 +90,14 @@ export async function loadData(name: string): Promise<string[]> {
         DATA_FILES[name] = await loadDataFile(name + '.txt');
     }
     return DATA_FILES[name] || [];
+}
+
+export async function loadCsv(name: string): Promise<CSVFILE[]> {
+    const data = DATA_CSV[name];
+    if (data === null) {
+        DATA_CSV[name] = await loadCsvFile(`${name}.csv`);
+    }
+    return DATA_CSV[name] || [];
 }
 
 export const EXTENSIONS_LIST: string[] = [

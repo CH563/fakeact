@@ -38,12 +38,15 @@
   "homepage": "https://github.com/CH563/fakeact",
   "license": "MIT",
   "dependencies": {
+    "@faker-js/faker": "^9.3.0",
     "chalk": "^5.3.0",
     "commander": "^12.1.0",
+    "csv-parser": "^3.0.0",
+    "dayjs": "^1.11.13",
     "ora": "^8.1.1"
   },
   "devDependencies": {
-    "typescript": "^5.7.2",
-    "@types/node": "^22.10.1"
+    "@types/node": "^22.10.1",
+    "typescript": "^5.7.2"
   }
 }
