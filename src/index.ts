@@ -14,7 +14,7 @@ program
     .option('-m, --modules <modules>', `run only these modules ${JSON.stringify(modulelists)}`, 'all')
     .option('-s, --speed-factor <factor>', 'global speed factor', '1')
     .option('--exit-after-time <time>', 'exit after specified running time (ms)')
-    .version('1.0.5')
+    .version('1.0.6')
     .parse();
 
 

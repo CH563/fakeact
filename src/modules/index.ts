@@ -12,6 +12,9 @@ import cryptomining from './cryptomining.js';
 import weblog from './weblog.js';
 import terraform from './terraform.js';
 import julia from './julia.js';
+import kernelCompile from './kernelCompile.js';
+import memdump from './memdump.js';
+import npm from './npm.js';
 
 export default {
     download,
@@ -27,5 +30,8 @@ export default {
     cryptomining,
     weblog,
     terraform,
-    julia
+    julia,
+    kernelCompile,
+    memdump,
+    npm
 };

@@ -13,7 +13,6 @@
 
 ![](https://github.com/CH563/fakeact/blob/main/gifs/download.gif)
 ![](https://github.com/CH563/fakeact/blob/main/gifs/composer.gif)
-<!-- ![](https://github.com/CH563/fakeact/blob/main/gifs/cc.gif) -->
 
 
 ### 按需运行
@@ -61,14 +60,15 @@ npm install fakeact -g
 - [x] dockerBuild - 模拟Docker构建日志
 - [x] dockerImageRm - 模拟Docker镜像删除日志
 - [x] download - 模拟文件下载日志
-- [ ] julia - 模拟Julia包管理器日志
-- [ ] kernelCompile - 模拟内核编译日志
-- [ ] memdump - 模拟内存转储日志
+- [x] julia - 模拟Julia包管理器日志
+- [x] kernelCompile - 模拟内核编译日志
+- [x] memdump - 模拟内存转储日志
 - [ ] mkinitcpio - 模拟initramfs生成日志
 - [ ] rkhunter - 模拟rootkit扫描日志
 - [ ] simcity - 模拟SimCity游戏日志
 - [x] terraform - 模拟Terraform部署日志
 - [x] weblog - 模拟Web服务器访问日志
+- [x] npm - 模拟NPM安装过程日志
 
 ## License
 
