@@ -15,6 +15,7 @@ import julia from './julia.js';
 import kernelCompile from './kernelCompile.js';
 import memdump from './memdump.js';
 import npm from './npm.js';
+import mkinitcpio from './mkinitcpio.js';
 
 export default {
     download,
@@ -33,5 +34,6 @@ export default {
     julia,
     kernelCompile,
     memdump,
-    npm
+    npm,
+    mkinitcpio
 };

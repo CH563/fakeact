@@ -2,7 +2,6 @@ import ora from 'ora';
 import chalk from 'chalk';
 import { getRandomInt, sleep, generateHexString } from '../utils/helpers.js';
 import { loadCsv } from '../utils/dataLoader.js';
-import { randomInt } from 'crypto';
 
 type PackageList = {
     name: string;

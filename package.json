@@ -8,7 +8,7 @@
   },
   "type": "module",
   "scripts": {
-    "build": "tsc && node dist/index.js -m npm",
+    "build": "tsc && node dist/index.js -m mkinitcpio",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [

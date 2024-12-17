@@ -125,3 +125,14 @@ export const EXTENSIONS_LIST: string[] = [
     'rpm',
     'exe',
 ];
+
+
+export const COMPRESSION_FORMATS_LIST: string[] = [
+    'gzip',
+    'bzip2',
+    'lzma',
+    'xz',
+    'lzop',
+    'lz4',
+    'zstd',
+];

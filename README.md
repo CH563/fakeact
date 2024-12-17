@@ -63,7 +63,7 @@ npm install fakeact -g
 - [x] julia - 模拟Julia包管理器日志
 - [x] kernelCompile - 模拟内核编译日志
 - [x] memdump - 模拟内存转储日志
-- [ ] mkinitcpio - 模拟initramfs生成日志
+- [x] mkinitcpio - 模拟initramfs生成日志
 - [ ] rkhunter - 模拟rootkit扫描日志
 - [ ] simcity - 模拟SimCity游戏日志
 - [x] terraform - 模拟Terraform部署日志
