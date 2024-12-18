@@ -128,5 +128,5 @@ async function cc(config: AppConfig = { shouldExit: false }, speedFactor: number
     await newline();
     await sleep(getRandomInt(300, 1000) / speedFactor);
 }
-
+cc.signature = 'gcc app.c';
 export default cc;

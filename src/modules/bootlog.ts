@@ -82,5 +82,5 @@ async function bootlog(speedFactor = 1, config?: AppConfig) {
         await sleep(lineSleepLength * speedFactor);
     }
 }
-
+bootlog.signature = 'bcdedit /set {current} bootlog Yes && shutdown /r';
 export default bootlog;

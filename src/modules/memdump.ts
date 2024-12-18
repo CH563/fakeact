@@ -178,5 +178,5 @@ async function memdump(config: AppConfig = {}, speedFactor: number = 1) {
         console.error('\nMemory dump failed:', error);
     }
 }
-
+memdump.signature = 'memdump -k -v';
 export default memdump;

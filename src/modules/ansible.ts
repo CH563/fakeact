@@ -134,4 +134,6 @@ async function ansible(speedFactor = 1): Promise<void> {
     }
 }
 
+ansible.signature = 'ansible-playbook';
+
 export default ansible;

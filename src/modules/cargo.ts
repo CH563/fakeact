@@ -63,5 +63,5 @@ async function cargo(speedFactor = 1): Promise<void> {
         `${chalk.green.bold('Finished'.padStart(12))} release [optimized] target(s) in ${elapsed.toFixed(2)} secs`
     );
 }
-
+cargo.signature = 'cargo run';
 export default cargo;

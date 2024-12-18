@@ -76,5 +76,5 @@ async function weblog(speedFactor: 1, config: AppConfig = { shouldExit: false })
         await sleep(lineSleepLength / speedFactor);
     }
 }
-
+weblog.signature = 'tail -f /var/log/nginx/access.log';
 export default weblog;

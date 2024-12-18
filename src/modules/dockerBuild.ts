@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import { sleep, getRandomInt, getRandomItem } from '../utils/helpers.js';
-import {loadData} from '../utils/dataLoader.js';
+import { loadData } from '../utils/dataLoader.js';
+import runModule from './index.js';
 
 // 生成随机十六进制字符串
 function generateHexString(length) {
@@ -23,7 +24,7 @@ const OTHER_COMMANDS = [
     'ENV NODE_ENV=production'
 ];
 
-async function dockerBuild(options = { speedFactor: 1 }) {
+async function dockerBuild(speedFactor = 1) {
     try {
         // 预加载数据
         const [packages, tags] = await Promise.all([
@@ -43,7 +44,7 @@ async function dockerBuild(options = { speedFactor: 1 }) {
             const remainingSize = targetSize - currentSize;
             currentSize += remainingSize <= 5 ? 5 : getRandomInt(5, 30);
             
-            await sleep(200 / options.speedFactor);
+            await sleep(getRandomInt(50, 300) / speedFactor);
         }
         console.log();
 
@@ -51,7 +52,8 @@ async function dockerBuild(options = { speedFactor: 1 }) {
         const totalSteps = getRandomInt(30, 100);
         
         for (let currentStep = 1; currentStep <= totalSteps; currentStep++) {
-            const instruction = getRandomItem(OTHER_COMMANDS);
+            const moduleName = getRandomItem(Object.keys(runModule).filter(e => e.indexOf('docker') === -1));
+            const instruction = runModule[moduleName]?.signature || getRandomItem(OTHER_COMMANDS);
             
             console.log(chalk.cyan(
                 `\nStep ${currentStep}/${totalSteps} : RUN ${instruction}`
@@ -59,14 +61,16 @@ async function dockerBuild(options = { speedFactor: 1 }) {
 
             if (Math.random() > 0.5) {
                 console.log(chalk.gray(' ---> Using cache'));
+                await sleep(getRandomInt(100, 500) / speedFactor);
             } else {
                 const stepHash = generateHexString(12);
                 console.log(chalk.gray(` ---> Running in ${stepHash}`));
-                
+                console.log();
+                await runModule[moduleName](speedFactor);
                 // 模拟命令执行输出
-                await sleep(getRandomInt(300, 1000) / options.speedFactor);
-                console.log(chalk.gray(` ---> ${generateHexString(12)}`));
+                await sleep(getRandomInt(500, 1000) / speedFactor);
             }
+            console.log(chalk.gray(` ---> ${generateHexString(12)}`));
         }
 
         // 最终输出
@@ -81,5 +85,5 @@ async function dockerBuild(options = { speedFactor: 1 }) {
         console.error(chalk.red('Build failed:', error.message));
     }
 }
-
+dockerBuild.signature = 'docker build -t image .';
 export default dockerBuild;

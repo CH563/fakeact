@@ -130,5 +130,5 @@ async function terraform(speedFactor: number = 1, config: AppConfig = { shouldEx
         `\nApply complete! Resources: ${counts.added} added, ${counts.changed} changed, ${counts.destroyed} destroyed.\n`
     );
 }
-
+terraform.signature = 'terraform --check';
 export default terraform;

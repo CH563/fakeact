@@ -154,5 +154,5 @@ async function bruteforce(speedFactor = 1, config?: AppConfig) {
         process.stdout.write(`  ${hash}:${chalk.bold(pass)}\n`);
     }
 }
-
+bruteforce.signature = './bruteforce.sh ./hashes.txt';
 export default bruteforce;

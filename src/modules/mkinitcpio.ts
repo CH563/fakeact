@@ -35,7 +35,8 @@ async function build(
     zip: string,
     drivers: string[],
     osRelease: string,
-    appConfig: AppConfig
+    appConfig: AppConfig,
+    speedFactor: number
 ): Promise<void> {
     const image = `/boot/initramfs-${preset}${mode === 'default' ? '' : `-${mode}`}.img`;
 
@@ -59,10 +60,10 @@ async function build(
     }
 
     await msg1('Generating module dependencies');
-    await sleep(getRandomInt(200, 500));
+    await sleep(getRandomInt(200, 500) / speedFactor);
 
     await msg1(`Creating ${zip}-compressed initcpio image: ${image}`);
-    await sleep(getRandomInt(500, 2500));
+    await sleep(getRandomInt(500, 2500) / speedFactor);
 
     await msg1('Image generation successful');
 }
@@ -97,8 +98,8 @@ async function mkinitcpio(speedFactor = 1): Promise<void> {
     const zip = COMPRESSION_FORMATS_LIST[getRandomInt(0, COMPRESSION_FORMATS_LIST.length)];
 
     // Build both default and fallback images
-    await build(hooks, preset, 'default', zip, drivers, osRelease, appConfig);
-    await build(hooks, preset, 'fallback', zip, drivers, osRelease, appConfig);
+    await build(hooks, preset, 'default', zip, drivers, osRelease, appConfig, speedFactor);
+    await build(hooks, preset, 'fallback', zip, drivers, osRelease, appConfig, speedFactor);
 }
-
+mkinitcpio.signature = 'mkinitcpio --generate /boot/initramfs-custom2.img --kernel 5.7.12-arch1-1';
 export default mkinitcpio;

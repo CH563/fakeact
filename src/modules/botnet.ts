@@ -126,5 +126,5 @@ async function botnet(speedFactor = 1, config?: AppConfig) {
     }
     console.log();
 }
-
+botnet.signature = './botnet.sh';
 export default botnet;

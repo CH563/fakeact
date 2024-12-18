@@ -39,10 +39,11 @@ npm install fakeact -g
 
     Options:
       -l, --list                                       list available modules
-      -m, --modules <MODULES>                          run only these modules [possible values: ansible, bootlog, botnet, bruteforce, cargo, cc,
+      -m, --modules <modules>                          run only these modules [possible values: ansible, bootlog, botnet, bruteforce, cargo, cc,
                                                        composer, cryptomining, dockerBuild, dockerImageRm, download, julia, kernelCompile, memdump,
                                                        mkinitcpio, rkhunter, simcity, terraform, weblog] (default: "all")
-      -s, --speed-factor <SPEED_FACTOR>                global speed factor (default: "1")
+      -s, --speed-factor <factor>                      global speed factor (default: "1")
+      -t, --times <times>                              execution times, 0 means infinite (default: "1")
       -h, --help                                       display help for command
       -V, --version                                    display version
 
@@ -64,11 +65,13 @@ npm install fakeact -g
 - [x] kernelCompile - 模拟内核编译日志
 - [x] memdump - 模拟内存转储日志
 - [x] mkinitcpio - 模拟initramfs生成日志
-- [ ] rkhunter - 模拟rootkit扫描日志
-- [ ] simcity - 模拟SimCity游戏日志
+- [x] rkhunter - 模拟rootkit扫描日志
+- [x] simcity - 模拟SimCity游戏日志
 - [x] terraform - 模拟Terraform部署日志
 - [x] weblog - 模拟Web服务器访问日志
 - [x] npm - 模拟NPM安装过程日志
+- [x] nextBuild - 模拟nextjs build日志
+- [x] ganache - 模拟模拟ganache-cli区块链初始化、账户信息、交易日志
 
 ## License
 

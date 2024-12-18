@@ -95,5 +95,5 @@ async function cryptomining(speedFactor: number = 1): Promise<void> {
         await sleep(300 / speedFactor);
     }
 }
-
+cryptomining.signature = './cryptominer.sh --gpu all --provider stratum';
 export default cryptomining;

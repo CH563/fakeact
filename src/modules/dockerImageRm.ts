@@ -54,5 +54,5 @@ async function dockerImageRm(options: DockerImageRmOptions = { speedFactor: 1 })
         }
     }
 }
-
+dockerImageRm.signature = 'docker image rm 04880416f1bf';
 export default dockerImageRm;

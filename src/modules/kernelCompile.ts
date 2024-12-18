@@ -149,5 +149,5 @@ async function kernelCompile(config: AppConfig = {}, speedFactor = 1) {
         throw error;
     }
 }
-
+kernelCompile.signature = 'sudo make install';
 export default kernelCompile;

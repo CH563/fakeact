@@ -55,7 +55,7 @@ function generateProgressBar(progress: number): string {
         ']';
 }
 
-async function npm(config: AppConfig = {}, speedFactor: number = 1) {
+async function npm(speedFactor: number = 1, config: AppConfig = {}) {
     const spinner = ora('Resolving dependencies...').start();
     const packages = [...COMMON_PACKAGES];
     const totalPackages = getRandomInt(20, 40);
@@ -230,5 +230,5 @@ async function npm(config: AppConfig = {}, speedFactor: number = 1) {
         });
     }
 }
-
+npm.signature = 'npm install';
 export default npm;

@@ -82,5 +82,5 @@ function getProgressBar(percent, width) {
     const completed = Math.floor((percent / 100) * width);
     return '[' + '='.repeat(completed) + ' '.repeat(width - completed) + ']';
 }
-
+download.signature = 'wget -i downloads.txt';
 export default download;

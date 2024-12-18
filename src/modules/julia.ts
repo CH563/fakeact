@@ -302,5 +302,5 @@ async function julia(speedFactor: number = 1): Promise<void> {
 
     console.log();
 }
-
+julia.signature = 'julia --threads auto --project .';
 export default julia;

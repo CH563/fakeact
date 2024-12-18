@@ -72,5 +72,5 @@ async function composer(speedFactor = 1): Promise<void> {
         throw error;
     }
 }
-
+composer.signature = 'composer install';
 export default composer;

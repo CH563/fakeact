@@ -1,6 +1,6 @@
 import download from './download.js';
 import composer from './composer.js';
-import dockBuild from './dockBuild.js';
+import dockerBuild from './dockerBuild.js';
 import dockerImageRm from './dockerImageRm.js';
 import ansible from './ansible.js';
 import bootlog from './bootlog.js';
@@ -16,11 +16,15 @@ import kernelCompile from './kernelCompile.js';
 import memdump from './memdump.js';
 import npm from './npm.js';
 import mkinitcpio from './mkinitcpio.js';
+import rkhunter from './rkhunter.js';
+import simcity from './simcity.js';
+import nextBuild from './nextBuild.js';
+import ganache from './ganache.js';
 
 export default {
     download,
     composer,
-    dockBuild,
+    dockerBuild,
     dockerImageRm,
     ansible,
     bootlog,
@@ -35,5 +39,9 @@ export default {
     kernelCompile,
     memdump,
     npm,
-    mkinitcpio
+    mkinitcpio,
+    rkhunter,
+    simcity,
+    nextBuild,
+    ganache
 };
