@@ -31,6 +31,15 @@ npm install fakeact -g
 
 全局安装 `fakeact` ，可以直接运行 fakeact 使用
 
+
+### Docker运行
+
+```bash
+docker run -it --rm ch563/fakeact -m composer
+```
+
+修改 -m 或 增加参数运行不同 module, 参考以下使用说明
+
 ### 使用
 
     A command line fake active tool
