@@ -15,7 +15,7 @@ program
     .option('-s, --speed-factor <factor>', 'global speed factor', '1')
     .option('-t, --times <times>', 'execution times, 0 means infinite', '1')
     // .option('--exit-after-time <time>', 'exit after specified running time (ms)')
-    .version('1.0.8')
+    .version('1.0.9')
     .parse();
 
 

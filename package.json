@@ -1,6 +1,6 @@
 {
   "name": "fakeact",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "🐟命令行摸鱼神器，模拟各种下载安装编辑的日志实时输出，假装很忙，摸鱼不慌张",
   "main": "dist/modules/index.js",
   "bin": {
@@ -9,7 +9,7 @@
   "type": "module",
   "scripts": {
     "start": "node dist/index.js -m dockerBuild",
-    "build": "tsc && node dist/index.js",
+    "build": "tsc && node dist/index.js -m download",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [

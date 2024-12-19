@@ -1,6 +1,6 @@
 import ora from 'ora';
 import chalk from 'chalk';
-import { getRandomInt, sleep } from '../utils/helpers.js';
+import { getRandomInt, getRandomItem, sleep } from '../utils/helpers.js';
 import { EXTENSIONS_LIST, loadData } from '../utils/dataLoader.js';
 
 import { formatBytes, formatDuration } from '../utils/format.js';
@@ -14,7 +14,9 @@ async function download(speedFactor = 1) {
     // 加载文件列表数据
     const CFILES_LIST = await loadData('cfiles');
 
-    const numFiles = CFILES_LIST.length;
+    const numFiles = getRandomInt(20, 60);
+
+    console.log(chalk.bold(`Download files ${numFiles}`));
     
     for (let fileIndex = 0; fileIndex < numFiles; fileIndex++) {
         // 随机选择一个文件扩展名
@@ -24,7 +26,8 @@ async function download(speedFactor = 1) {
         const downloadSpeed = getRandomInt(10_000_000, 100_000_000);
 
         // 随机选择一个文件名
-        const arr = CFILES_LIST[fileIndex].split('/');
+        const fileStr = getRandomItem(CFILES_LIST);
+        const arr = fileStr.split('/');
         const fileName = arr[arr.length-1].replace(/\.c$/, `.${extension}`);
 
         // 随机生成文件大小 (30MB-300MB)
