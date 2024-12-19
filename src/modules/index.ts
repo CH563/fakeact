@@ -20,6 +20,7 @@ import rkhunter from './rkhunter.js';
 import simcity from './simcity.js';
 import nextBuild from './nextBuild.js';
 import ganache from './ganache.js';
+import pip from './pip.js';
 
 export default {
     download,
@@ -43,5 +44,6 @@ export default {
     rkhunter,
     simcity,
     nextBuild,
-    ganache
+    ganache,
+    pip
 };

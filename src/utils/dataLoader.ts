@@ -28,7 +28,7 @@ export const DATA_FILES: { [key: string]: string[] | null } = {
     rkhunter_checks: null,
     rkhunter_rootkits: null,
     rkhunter_tasks: null,
-    
+    pypi: null,
     terraform_aws_resources: null,
     terraform_azure_resources: null,
     terraform_gcp_resources: null,

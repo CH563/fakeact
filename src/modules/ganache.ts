@@ -150,8 +150,9 @@ class GanacheSimulator {
 
         console.log(chalk.green('\nBlockchain Started'));
         console.log(chalk.green('==================\n'));
+        const times = getRandomInt(30, 60);
 
-        while (this.isRunning) {
+        for (let i = 0; i < times; i++) {
             await this.simulateNewBlock();
             
             if (this.config.blockTime) {
@@ -159,7 +160,7 @@ class GanacheSimulator {
             } else {
                 await sleep(1000 * (this.config.speedFactor || 1));
             }
-
+    
             // 随机生成 RPC 调用日志
             if (Math.random() > 0.7) {
                 const methods = ['eth_getBalance', 'eth_getTransactionCount', 'eth_getCode', 'eth_call'];
@@ -181,9 +182,7 @@ class GanacheSimulator {
 
 async function ganache(speedFactor: number = 1, config: GanacheConfig = {}): Promise<void> {
     const simulator = new GanacheSimulator(speedFactor, config);
-
     await simulator.start();
-    await sleep(getRandomInt(16000, 30000));
     simulator.stop();
 }
 

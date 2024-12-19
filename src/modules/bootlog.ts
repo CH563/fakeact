@@ -1,7 +1,7 @@
 import ora from 'ora';
 import chalk from 'chalk';
 import { loadData } from '../utils/dataLoader.js';
-import { getRandomInt, sleep } from '../utils/helpers.js';
+import { getRandomInt, getRandomItem, sleep } from '../utils/helpers.js';
 
 interface AppConfig {
     shouldExit: () => boolean;
@@ -24,7 +24,7 @@ async function bootlog(speedFactor = 1, config?: AppConfig) {
         }
 
         // 随机选择一行日志
-        const choice = BOOTLOG_LIST[getRandomInt(0, BOOTLOG_LIST.length)];
+        const choice = getRandomItem(BOOTLOG_LIST);
         
         // 设置延迟时间
         let lineSleepLength = getRandomInt(10, 1000);

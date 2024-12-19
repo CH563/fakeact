@@ -71,7 +71,21 @@ npm install fakeact -g
 - [x] weblog - 模拟Web服务器访问日志
 - [x] npm - 模拟NPM安装过程日志
 - [x] nextBuild - 模拟nextjs build日志
-- [x] ganache - 模拟模拟ganache-cli区块链初始化、账户信息、交易日志
+- [x] ganache - 模拟ganache-cli区块链初始化、账户信息、交易日志
+- [x] pip - 模拟pip install日志
+
+### 本地构建
+
+通过git clone下载源码，构建运行，为了模块共同减少空间推荐使用 `pnpm`:
+
+    git clone https://github.com/CH563/fakeact.git
+    cd fakeact
+    pnpm install
+    pnpm run build
+
+## TODO
+
+网页版，使用 `xtermjs` 在网页上运行输出
 
 ## License
 
