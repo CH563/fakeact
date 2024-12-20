@@ -1,10 +1,12 @@
-import fs from 'fs';
-import path from 'path';
-import csv from 'csv-parser';
-import { fileURLToPath } from 'url';
+import { EnvDetector } from './environment.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// import fs from 'fs';
+// import path from 'path';
+// import csv from 'csv-parser';
+// import { fileURLToPath } from 'url';
+
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
 
 interface CSVFILE {
     name: string;
@@ -41,16 +43,27 @@ export const DATA_CSV: { [key: string]: CSVFILE[] | null } = {
 
 async function loadDataFile(filename: string): Promise<string[]> {
     try {
-        const filePath = path.join(__dirname, '../..', 'data', filename);
-        const content = await fs.promises.readFile(filePath, 'utf8');
-        return content
-            .trim()
-            .split('\n')
-            .filter((line) => line.length > 0);
-    } catch (error) {
-        console.error(`Error loading ${filename}:`, error.message);
-        return [];
-    }
+            if (EnvDetector.isNode()) {
+                const path = await import('path');
+                const fs = await import('fs');
+                const { fileURLToPath } = await import('url');
+                const __filename = fileURLToPath(import.meta.url);
+                const __dirname = path.dirname(__filename);
+                const filePath = path.join(__dirname, '../..', 'data', filename);
+                const content = await fs.promises.readFile(filePath, 'utf8');
+                return content
+                    .trim()
+                    .split('\n')
+                    .filter((line) => line.length > 0);
+            } else {
+                const response = await fetch(`https://ch563.s3.ap-southeast-1.amazonaws.com/data/${filename}`);
+                const content = await response.text();
+                return content.trim().split('\n').filter((line) => line.length > 0);
+            }
+        } catch (error) {
+            console.error(`Error loading ${filename}:`, error.message);
+            return [];
+        }
 };
 
 const getVersions = (data: any) => {
@@ -64,24 +77,31 @@ const getVersions = (data: any) => {
     return versions;
 }
 
-const loadCsvFile = (filename: string): Promise<CSVFILE[]> => new Promise((resolve, reject) => {
+const loadCsvFile = (filename: string): Promise<CSVFILE[]> => new Promise(async (resolve, reject) => {
     const results: CSVFILE[] = [];
-    const filePath = path.join(__dirname, '../..', 'data', filename);
-    fs.createReadStream(filePath)
-        .pipe(csv()).on('data', (data) => {
-            results.push({
-                name: data['AAindex'] || 'Revise',
-                id: data['1cd36ffe'] || '295af30f',
-                versions: getVersions(data),
-            });
-    })
-    .on('end', () => {
+    if (EnvDetector.isNode()) {
+        const path = await import('path');
+        const fs = await import('fs');
+        const csv = (await import('csv-parser')).default;
+        const filePath = path.join(__dirname, '../..', 'data', filename);
+        fs.createReadStream(filePath)
+            .pipe(csv()).on('data', (data) => {
+                results.push({
+                    name: data['AAindex'] || 'Revise',
+                    id: data['1cd36ffe'] || '295af30f',
+                    versions: getVersions(data),
+                });
+        })
+        .on('end', () => {
+            resolve(results);
+        })
+        .on('error', (error) => {
+            console.error('Error reading CSV file:', error);
+            resolve(results);
+        });
+    } else {
         resolve(results);
-    })
-    .on('error', (error) => {
-        console.error('Error reading CSV file:', error);
-        resolve(results);
-    });
+    }
 })
 
 export async function loadData(name: string): Promise<string[]> {

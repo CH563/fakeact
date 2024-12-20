@@ -1,0 +1,32 @@
+---
+export interface Props {
+    module?: string;
+}
+const { module } = Astro.props;
+---
+
+<div class="bg-black w-full h-full" id="container" data-module={module}></div>
+
+<script>
+    import '/node_modules/@xterm/xterm/css/xterm.css';
+    import { Terminal } from '@xterm/xterm';
+    import { FitAddon } from '@xterm/addon-fit';
+    import { WebLinksAddon } from '@xterm/addon-web-links';
+    import ansible from '../../../src/modules/ansible';
+
+    const container = document.getElementById('container');
+    if (container) {
+        const module = container?.getAttribute('data-module');
+        console.log(module);
+        const terminal = new Terminal({
+            scrollback: 0
+        });
+        const fitAddon = new FitAddon();
+        (window as any).terminal = terminal;
+        terminal.loadAddon(fitAddon);
+        terminal.loadAddon(new WebLinksAddon());
+        terminal.open(container);
+        fitAddon.fit();
+        ansible();
+    }
+</script>

@@ -1,0 +1,9 @@
+---
+import CommandLine from '../../components/CommandLine.astro';
+import Layout from '../../layouts/Layout.astro';
+const { module } = Astro.params;
+---
+
+<Layout>
+	<CommandLine module={module} />
+</Layout>
