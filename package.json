@@ -9,7 +9,7 @@
   "type": "module",
   "scripts": {
     "start": "node dist/index.js -m ansible",
-    "build": "tsc && node dist/index.js -m download",
+    "build": "tsc && node dist/index.js -m botnet",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [

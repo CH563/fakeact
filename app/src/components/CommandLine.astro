@@ -13,6 +13,8 @@ const { module } = Astro.props;
     import { FitAddon } from '@xterm/addon-fit';
     import { WebLinksAddon } from '@xterm/addon-web-links';
     import ansible from '../../../src/modules/ansible';
+    import bootlog from '../../../src/modules/bootlog';
+    import botnet from '../../../src/modules/botnet';
 
     const container = document.getElementById('container');
     if (container) {
@@ -27,6 +29,12 @@ const { module } = Astro.props;
         terminal.loadAddon(new WebLinksAddon());
         terminal.open(container);
         fitAddon.fit();
-        ansible();
+        (async() => {
+            while(true) {
+                if (module === 'ansible') await ansible();
+                if (module === 'bootlog') await bootlog();
+                if (module === 'botnet') await botnet();
+            }
+        })()
     }
 </script>
