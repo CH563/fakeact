@@ -11,7 +11,7 @@ export default defineConfig({
   vite: {
     build: {
       rollupOptions: {
-        external: ['fs', 'path', 'url', 'chalk', 'ora', 'csv-parser'],
+        external: ['fs', 'path', 'url', 'ora', 'csv-parser'],
       }
     }
   }
