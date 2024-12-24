@@ -11,7 +11,7 @@ export default defineConfig({
   vite: {
     build: {
       rollupOptions: {
-        external: ['fs', 'path', 'url'],
+        external: ['fs', 'path', 'url', 'chalk'],
       }
     }
   }
