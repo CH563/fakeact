@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import { loadData } from '../utils/dataLoader.js';
 import { getRandomInt, sleep } from '../utils/helpers.js';
+import { writeLine, write } from '../utils/environment.js';
 
 interface AppConfig {
     shouldExit: boolean;
@@ -15,11 +16,11 @@ interface ResourceCounts {
 type CloudProvider = 'AWS' | 'AZURE' | 'GCP';
 
 async function bold(msg: string): Promise<void> {
-    console.log(chalk.bold(msg));
+    writeLine(chalk.bold(msg));
 }
 
 async function print(msg: string): Promise<void> {
-    process.stdout.write(msg);
+    write(msg);
 }
 
 async function terraform(speedFactor: number = 1, config: AppConfig = { shouldExit: false }): Promise<void> {
@@ -42,7 +43,7 @@ async function terraform(speedFactor: number = 1, config: AppConfig = { shouldEx
     const numResources = getRandomInt(30, 300);
     
     // Start message
-    await print("Acquiring state lock. This may take a few moments...\n");
+    writeLine("Acquiring state lock. This may take a few moments...");
     await sleep(500 / speedFactor);
 
     // Start time
@@ -118,17 +119,19 @@ async function terraform(speedFactor: number = 1, config: AppConfig = { shouldEx
 
         // Check if should exit
         if (config.shouldExit) {
-            await print(
-                `\nApply complete! Resources: ${counts.added} added, ${counts.changed} changed, ${counts.destroyed} destroyed.\n`
+            writeLine(
+                `Apply complete! Resources: ${counts.added} added, ${counts.changed} changed, ${counts.destroyed} destroyed.`
             );
+            writeLine();
             return;
         }
     }
 
     // Final message
-    await print(
-        `\nApply complete! Resources: ${counts.added} added, ${counts.changed} changed, ${counts.destroyed} destroyed.\n`
+    writeLine(
+        `Apply complete! Resources: ${counts.added} added, ${counts.changed} changed, ${counts.destroyed} destroyed.`
     );
+    writeLine();
 }
 terraform.signature = 'terraform --check';
 export default terraform;

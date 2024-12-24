@@ -1,7 +1,6 @@
-import ora from 'ora';
 import chalk from 'chalk';
 import { getRandomInt, sleep } from '../utils/helpers.js';
-import crypto from 'crypto';
+import { cryptoFun, write, writeLine } from '../utils/environment.js';
 
 interface AppConfig {
     shouldExit: () => boolean;
@@ -14,11 +13,11 @@ function generateRandomName(): string {
 }
 
 // 生成随机的密码和对应的哈希
-function genPassAndHash(): [string, string] {
+async function genPassAndHash(): Promise<[string, string]> {
     const name = generateRandomName();
     const num = String(Math.floor(Math.random() * 99)).padStart(2, '0');
     const pass = `${name}${num}`;
-    const hash = crypto.createHash('sha256').update(pass).digest('hex');
+    const hash = await cryptoFun(pass);
     return [pass, hash];
 }
 
@@ -82,13 +81,15 @@ class HashGuesser {
 async function bruteforce(speedFactor = 1, config?: AppConfig) {
     // Generate random number of parallel tasks
     const nParallel = getRandomInt(2, 10);
-    const passHashPairs = Array(nParallel).fill(0).map(() => genPassAndHash());
-
-    process.stdout.write('=> Hashes to decrypt\n');
+    const passHashPairs = [];
+    for (let i = 0; i < nParallel; i++) {
+        passHashPairs.push(await genPassAndHash());
+    }
+    writeLine('=> Hashes to decrypt');
     await sleep(500);
 
     for (const [_, hash] of passHashPairs) {
-        process.stdout.write(`  ${hash}\n`);
+        writeLine(`  ${hash}`);
     }
     await sleep(500);
 
@@ -107,7 +108,7 @@ async function bruteforce(speedFactor = 1, config?: AppConfig) {
         const progressBar = progress + spinner + spaces;
         const rainbowProgress = rainbow(progressBar);
         
-        process.stdout.write(`\r${message} [${rainbowProgress}]`);
+        write(`\r${message} [${rainbowProgress}]`);
         
         await sleep(millisWait / width);
         spinnerIdx = (spinnerIdx + 1) % spinnerChars.length;
@@ -116,9 +117,9 @@ async function bruteforce(speedFactor = 1, config?: AppConfig) {
             return;
         }
     }
-    process.stdout.write('\n');
+    writeLine('');
 
-    process.stdout.write('=> Begin matching\n');
+    writeLine('=> Begin matching');
     await sleep(500);
 
     // Show the progress of "decryption"
@@ -127,17 +128,17 @@ async function bruteforce(speedFactor = 1, config?: AppConfig) {
 
     while (!guessers.every(g => g.completed())) {
         if (!first) {
-            process.stdout.write(`\x1B[${guessers.length - 1}A`);
+            write(`\x1B[${guessers.length - 1}A`);
         }
         first = false;
 
         for (let i = 0; i < guessers.length; i++) {
             const guesser = guessers[i];
             guesser.tickGuess();
-            process.stdout.write(`\r :: ${guesser.toString()} ::`);
+            write(`\r :: ${guesser.toString()} ::`);
             
             if (i !== guessers.length - 1) {
-                process.stdout.write('\n');
+                write('\n');
             }
         }
 
@@ -148,10 +149,11 @@ async function bruteforce(speedFactor = 1, config?: AppConfig) {
         }
     }
 
-    process.stdout.write('\n=> Match found\n');
+    writeLine();
+    writeLine('=> Match found');
 
     for (const [pass, hash] of passHashPairs) {
-        process.stdout.write(`  ${hash}:${chalk.bold(pass)}\n`);
+        writeLine(`  ${hash}:${chalk.bold(pass)}`);
     }
 }
 bruteforce.signature = './bruteforce.sh ./hashes.txt';

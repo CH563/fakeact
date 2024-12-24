@@ -85,3 +85,19 @@ export const oraFun = async () => {
     }
     return new BrowserOra();
 }
+
+export const cryptoFun = async (str: string): Promise<string> => {
+    let hash = '';
+    if (EnvDetector.isNode()) {
+        const crypto = await import('crypto');
+        hash = crypto.createHash('sha256').update(str).digest('hex');
+    }
+    if (EnvDetector.isBrowser()) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(str);
+        const hashBuffer = await window.crypto.subtle.digest("SHA-256", data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        hash = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+    }
+    return hash;
+};

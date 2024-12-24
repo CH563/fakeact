@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import { loadData } from '../utils/dataLoader.js';
 import { getRandomInt, sleep, getRandomItem } from '../utils/helpers.js';
+import { write, writeLine, EnvDetector } from '../utils/environment.js';
 
 interface AppConfig {
     shouldExit: boolean;
@@ -88,9 +89,13 @@ async function simulateDownloadProgress(totalSize: number, duration: number): Pr
                 `eta ${chalk.cyan(stats.eta)}`
             ].join(' ');
             
-            process.stdout.clearLine(0);
-            process.stdout.cursorTo(0);
-            process.stdout.write(progress_line);
+            if (EnvDetector.isBrowser()) {
+                write('\x1b[2K\r');
+            } else {
+                process.stdout.clearLine(0);
+                process.stdout.cursorTo(0);
+            }
+            write(progress_line);
             lastSteps = stats.speed;
         }
         
@@ -99,9 +104,14 @@ async function simulateDownloadProgress(totalSize: number, duration: number): Pr
     
     // Complete the progress bar
     const final_line = `${generateProgressBar(1)} ${chalk.green(`${formatBytes(totalSize)}/${formatBytes(totalSize)}`)} ${chalk.red(formatSpeed(lastSteps))} eta ${chalk.cyan('0:00:00')}`;
-    process.stdout.clearLine(0);
-    process.stdout.cursorTo(0);
-    process.stdout.write(final_line + '\n');
+    if (EnvDetector.isBrowser()) {
+        write('\x1b[2K\r');
+    } else {
+        process.stdout.clearLine(0);
+        process.stdout.cursorTo(0);
+    }
+    write(final_line);
+    writeLine();
 }
 
 async function generateRandomVersion(): Promise<string> {
@@ -130,10 +140,10 @@ async function pip( speedFactor: number = 1, config: AppConfig = { shouldExit: f
         selectedPackages.add(getRandomItem(PACKAGES_LIST));
     }
 
-    console.log(chalk.cyan('Collecting packages from requirements.txt...'));
+    writeLine(chalk.cyan('Collecting packages from requirements.txt...'));
     await sleep(getRandomInt(100, 500) / speedFactor);
 
-    console.log(chalk.dim('Resolving dependencies...'));
+    writeLine(chalk.dim('Resolving dependencies...'));
     await sleep(getRandomInt(100, 500) / speedFactor);
 
     for (const packageName of selectedPackages) {
@@ -141,33 +151,33 @@ async function pip( speedFactor: number = 1, config: AppConfig = { shouldExit: f
 
         if (Math.random() < 0.2) {
             const warning = await formatMessage(getRandomItem(WARNING_TYPES), packageName);
-            console.log(chalk.yellow(warning));
+            writeLine(chalk.yellow(warning));
             await sleep(getRandomInt(100, 500) / speedFactor);
         }
 
-        console.log(await formatMessage(INSTALL_STATES[0], packageName));
+        writeLine(await formatMessage(INSTALL_STATES[0], packageName));
         
         // Download simulation with progress bar
         const downloadMsg = await formatMessage(INSTALL_STATES[1], packageName);
-        console.log(chalk.dim(downloadMsg));
+        writeLine(chalk.dim(downloadMsg));
         
         const totalSize = getRandomInt(100 * 1024, 10 * 1024 * 1024); // Random size between 100KB and 10MB
         await simulateDownloadProgress(totalSize, getRandomInt(2000, 5000) * speedFactor);
 
         if (Math.random() < 0.05) {
             const error = await formatMessage(getRandomItem(ERROR_MESSAGES), packageName);
-            console.log(chalk.red(error));
+            writeLine(chalk.red(error));
             continue;
         }
 
-        console.log(await formatMessage(INSTALL_STATES[2], packageName));
+        writeLine(await formatMessage(INSTALL_STATES[2], packageName));
         await sleep(getRandomInt(100, 500) / speedFactor);
         
-        console.log(chalk.green(await formatMessage(INSTALL_STATES[3], packageName)));
+        writeLine(chalk.green(await formatMessage(INSTALL_STATES[3], packageName)));
         await sleep(getRandomInt(100, 500) / speedFactor);
     }
 
-    console.log(chalk.green(`\nSuccessfully installed ${selectedPackages.size} packages`));
+    writeLine(chalk.green(`\nSuccessfully installed ${selectedPackages.size} packages`));
 }
 
 pip.signature = 'pip install -r requirements.txt';

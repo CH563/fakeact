@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import { loadData, COMPRESSION_FORMATS_LIST } from '../utils/dataLoader.js';
 import { getRandomInt, sleep } from '../utils/helpers.js';
+import { writeLine } from '../utils/environment.js';
 
 const REQUIRED_HOOKS = [
     "base",
@@ -17,15 +18,15 @@ interface AppConfig {
 }
 
 async function warn(msg: string): Promise<void> {
-    console.log(`${chalk.yellow.bold('==> WARNING: ')}${chalk.bold(msg)}`);
+    writeLine(`${chalk.yellow.bold('==> WARNING: ')}${chalk.bold(msg)}`);
 }
 
 async function msg1(msg: string): Promise<void> {
-    console.log(`${chalk.green.bold('==> ')}${chalk.bold(msg)}`);
+    writeLine(`${chalk.green.bold('==> ')}${chalk.bold(msg)}`);
 }
 
 async function msg2(msg: string): Promise<void> {
-    console.log(`${chalk.blue.bold('  -> ')}${chalk.bold(msg)}`);
+    writeLine(`${chalk.blue.bold('  -> ')}${chalk.bold(msg)}`);
 }
 
 async function build(

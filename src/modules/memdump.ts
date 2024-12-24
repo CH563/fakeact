@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import { getRandomInt, sleep } from '../utils/helpers.js';
+import { write, writeLine } from '../utils/environment.js';
 
 interface AppConfig {
     shouldExit?: boolean;
@@ -121,16 +122,16 @@ async function memdump(config: AppConfig = {}, speedFactor: number = 1) {
         let regionType = MemoryRegionType.CODE; // 初始区域类型
         
         // 设置输出模式
-        process.stdout.write('\x1b[?25l'); // 隐藏光标
+        write('\x1b[?25l'); // 隐藏光标
         
         for (let i = 0; i < numLines; i++) {
             if (config.shouldExit) {
-                process.stdout.write('\x1b[?25h'); // 恢复光标
+                write('\x1b[?25h'); // 恢复光标
                 return;
             }
 
             // 地址输出
-            process.stdout.write(chalk.gray(`${currentLoc.toString(16).padStart(16, '0')}  `));
+            write(chalk.gray(`${currentLoc.toString(16).padStart(16, '0')}  `));
 
             // 可能切换内存区域类型
             if (i % 16 === 0) {
@@ -144,8 +145,8 @@ async function memdump(config: AppConfig = {}, speedFactor: number = 1) {
             
             // 打印十六进制值
             for (let j = 0; j < values.length; j++) {
-                if (j === 8) process.stdout.write(' ');
-                process.stdout.write(chalk.hex('#A0A0A0')(values[j] + ' '));
+                if (j === 8) write(' ');
+                write(chalk.hex('#A0A0A0')(values[j] + ' '));
                 
                 // 更自然的打印延迟
                 const valueDelay = getRandomInt(10, 50);
@@ -153,28 +154,28 @@ async function memdump(config: AppConfig = {}, speedFactor: number = 1) {
             }
             
             // ASCII表示
-            process.stdout.write(' |');
+            write(' |');
             for (const value of values) {
                 const charCode = parseInt(value, 16);
                 const char = isPrintableAscii(charCode) ? 
                     String.fromCharCode(charCode) : 
                     chalk.dim('.');
-                process.stdout.write(char);
+                write(char);
             }
-            process.stdout.write('|');
+            write('|');
             
             // 行间延迟
             const rowDelay = getRandomInt(20, 80); // 更快的行间延迟
             await sleep(rowDelay / speedFactor);
             
             currentLoc += 16n;
-            process.stdout.write('\n');
+            writeLine();
         }
         
-        process.stdout.write('\x1b[?25h'); // 恢复光标
+        write('\x1b[?25h'); // 恢复光标
         
     } catch (error) {
-        process.stdout.write('\x1b[?25h'); // 确保恢复光标
+        write('\x1b[?25h'); // 确保恢复光标
         console.error('\nMemory dump failed:', error);
     }
 }

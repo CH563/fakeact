@@ -15,11 +15,24 @@ const { module } = Astro.props;
     import ansible from '../../../src/modules/ansible';
     import bootlog from '../../../src/modules/bootlog';
     import botnet from '../../../src/modules/botnet';
+    import bruteforce from '../../../src/modules/bruteforce';
+    import cargo from '../../../src/modules/cargo';
+    import cc from '../../../src/modules/cc';
+    import composer from '../../../src/modules/composer';
+    import cryptomining from '../../../src/modules/cryptomining';
+    import ganache from '../../../src/modules/ganache';
+    import kernelCompile from '../../../src/modules/kernelCompile';
+    import memdump from '../../../src/modules/memdump';
+    import mkinitcpio from '../../../src/modules/mkinitcpio';
+    import pip from '../../../src/modules/pip';
+    import nextBuild from '../../../src/modules/nextBuild';
+    import rkhunter from '../../../src/modules/rkhunter';
+    import simcity from '../../../src/modules/simcity';
+    import terraform from '../../../src/modules/terraform';
 
     const container = document.getElementById('container');
     if (container) {
         const module = container?.getAttribute('data-module');
-        console.log(module);
         const terminal = new Terminal({
             scrollback: 0
         });
@@ -34,6 +47,21 @@ const { module } = Astro.props;
                 if (module === 'ansible') await ansible();
                 if (module === 'bootlog') await bootlog();
                 if (module === 'botnet') await botnet();
+                if (module === 'bruteforce') await bruteforce();
+                if (module === 'cargo') await cargo();
+                if (module === 'cc') await cc();
+                if (module === 'composer') await composer();
+                if (module === 'cryptomining') await cryptomining();
+                if (module === 'ganache') await ganache();
+                if (module === 'kernelCompile') await kernelCompile();
+                if (module === 'memdump') await memdump();
+                if (module === 'mkinitcpio') await mkinitcpio();
+                if (module === 'pip') await pip();
+                if (module === 'nextBuild') await nextBuild();
+                if (module === 'rkhunter') await rkhunter();
+                if (module === 'simcity') await simcity();
+                if (module === 'terraform') await terraform();
+                // if (module === 'weblog') await weblog();
             }
         })()
     }

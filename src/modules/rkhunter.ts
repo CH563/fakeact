@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import { loadData } from '../utils/dataLoader.js';
 import { sleep, chooseMultipleRandom, getRandomItem, genPackageVersion } from '../utils/helpers.js';
+import { writeLine } from '../utils/environment.js';
 
 interface AppConfig {
     shouldExit: boolean;
@@ -29,46 +30,46 @@ async function rkhunter(speedFactor: number = 1, config: AppConfig = { shouldExi
     ]);
 
     const version = genPackageVersion();
-    console.log(`Running Rootkit Hunter version ${version} on localhost\n`);
+    writeLine(`Running Rootkit Hunter version ${version} on localhost\n`);
     await sleep(500 / speedFactor);
 
-    console.log(`Info: Start date is ${getCurrentDate()}\n`);
-    console.log('Info: Detected operating system is \'Linux\'');
-    console.log(`Found O/S name: Ubuntu ${genPackageVersion()}`);
+    writeLine(`Info: Start date is ${getCurrentDate()}\n`);
+    writeLine('Info: Detected operating system is \'Linux\'');
+    writeLine(`Found O/S name: Ubuntu ${genPackageVersion()}`);
     await sleep(500 / speedFactor);
 
     // Print initial configuration information
-    console.log('Info: Environment shell is /bin/bash; rkhunter is using dash');
-    console.log('Info: Using configuration file \'/etc/rkhunter.conf\'');
-    console.log('Info: Installation directory is \'/usr\'');
-    console.log('Info: Using language \'en\'');
-    console.log('Info: Using \'/var/lib/rkhunter/db\' as the database directory');
-    console.log('Info: Using \'/usr/share/rkhunter/scripts\' as the support script directory');
-    console.log('Info: Using \'/var/lib/rkhunter/db\' as the database directory');
-    console.log('Info: Using \'/usr/share/rkhunter/scripts\' as the support script directory');
-    console.log('Info: Using \'/usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /usr/games /usr/local/games /snap/bin /usr/libexec\' as the command directories');
-    console.log('Info: Using \'/var/lib/rkhunter/tmp\' as the temporary directory');
-    console.log('Info: No mail-on-warning address configured\n');
+    writeLine('Info: Environment shell is /bin/bash; rkhunter is using dash');
+    writeLine('Info: Using configuration file \'/etc/rkhunter.conf\'');
+    writeLine('Info: Installation directory is \'/usr\'');
+    writeLine('Info: Using language \'en\'');
+    writeLine('Info: Using \'/var/lib/rkhunter/db\' as the database directory');
+    writeLine('Info: Using \'/usr/share/rkhunter/scripts\' as the support script directory');
+    writeLine('Info: Using \'/var/lib/rkhunter/db\' as the database directory');
+    writeLine('Info: Using \'/usr/share/rkhunter/scripts\' as the support script directory');
+    writeLine('Info: Using \'/usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /usr/games /usr/local/games /snap/bin /usr/libexec\' as the command directories');
+    writeLine('Info: Using \'/var/lib/rkhunter/tmp\' as the temporary directory');
+    writeLine('Info: No mail-on-warning address configured\n');
 
     await sleep(500 / speedFactor);
-    console.log('Checking if the O/S has changed since last time...');
+    writeLine('Checking if the O/S has changed since last time...');
     await sleep(500 / speedFactor);
-    console.log('Info: Nothing seems to have changed.');
-    console.log('Info: Locking is not being used\n');
+    writeLine('Info: Nothing seems to have changed.');
+    writeLine('Info: Locking is not being used\n');
 
     await sleep(500 / speedFactor);
-    console.log('Starting system checks...\n');
+    writeLine('Starting system checks...\n');
 
     while (!config.shouldExit) {
         const task = getRandomItem(RKHUNTER_TASKS_LIST);
-        console.log(task);
+        writeLine(task);
 
         const isRootkit = Math.random() < 0.5;
         const rkPad = isRootkit ? '  ' : '';
         const rootkit = getRandomItem(RKHUNTER_ROOTKITS_LIST);
 
         if (isRootkit) {
-            console.log(`  Checking for ${rootkit}...`);
+            writeLine(`  Checking for ${rootkit}...`);
         }
 
         let rootkitFound = false;
@@ -93,15 +94,15 @@ async function rkhunter(speedFactor: number = 1, config: AppConfig = { shouldExi
                 checkStatus = 'Skipped';
             }
 
-            console.log(`${rkPad}  ${check.padEnd(checkPad)} [ ${checkStatus} ]`);
+            writeLine(`${rkPad}  ${check.padEnd(checkPad)} [ ${checkStatus} ]`);
         }
 
         if (isRootkit) {
             checkPad += 2;
-            console.log(`  ${rootkit.padEnd(checkPad)} [ ${rootkitFound ? chalk.red('Found') : 'Not found'} ]`);
+            writeLine(`  ${rootkit.padEnd(checkPad)} [ ${rootkitFound ? chalk.red('Found') : 'Not found'} ]`);
         }
 
-        console.log();
+        writeLine();
         await sleep(500 / speedFactor);
     }
 }

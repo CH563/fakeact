@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import { sleep, getRandomItem, getRandomInt } from '../utils/helpers.js';
+import { writeLine } from '../utils/environment.js';
 
 interface GanacheConfig {
     port?: number;
@@ -76,60 +77,70 @@ class GanacheSimulator {
         const value = (Math.random() * 10).toFixed(4);
         const txHash = this.generateTxHash();
         
-        console.log(chalk.dim(`eth_sendTransaction`));
-        console.log(
-            chalk.dim(`  Transaction: ${txHash}\n`) +
-            chalk.dim(`  From:       ${fromAccount.address}\n`) +
-            chalk.dim(`  To:         ${toAccount.address}\n`) +
-            chalk.dim(`  Value:      ${value} ETH\n`) +
-            chalk.dim(`  Gas used:   ${Math.floor(Math.random() * 50000 + 21000)}`)
-        );
+        writeLine(chalk.dim(`eth_sendTransaction`));
+        writeLine(chalk.dim(`  Transaction: ${txHash}`));
+        writeLine(chalk.dim(`  From:       ${fromAccount.address}`));
+        writeLine(chalk.dim(`  To:         ${toAccount.address}`));
+        writeLine(chalk.dim(`  Value:      ${value} ETH`));
+        writeLine(chalk.dim(`  Gas used:   ${Math.floor(Math.random() * 50000 + 21000)}`));
         this.txCount++;
     }
 
     // 打印启动信息
     private async printStartupInfo(): Promise<void> {
-        console.log(chalk.green('\nGanache CLI v2.13.2 (ganache-core: 2.13.2)'));
+        writeLine(chalk.green('\nGanache CLI v2.13.2 (ganache-core: 2.13.2)'));
         
         if (this.config.fork) {
-            console.log(chalk.yellow(`\nForking from ${this.config.fork} at block number ${Math.floor(Math.random() * 1000000)}`));
+            writeLine(chalk.yellow(`\nForking from ${this.config.fork} at block number ${Math.floor(Math.random() * 1000000)}`));
         }
 
-        console.log(chalk.green('\nAvailable Accounts'));
-        console.log(chalk.green('=================='));
+        await sleep(300);
+
+        writeLine(chalk.green('\nAvailable Accounts'));
+        writeLine(chalk.green('=================='));
         this.accounts.forEach((account, index) => {
-            console.log(`(${index}) ${account.address} (${account.balance})`);
+            writeLine(`(${index}) ${account.address} (${account.balance})`);
         });
 
-        console.log(chalk.green('\nPrivate Keys'));
-        console.log(chalk.green('=================='));
+        await sleep(200);
+
+        writeLine(chalk.green('\nPrivate Keys'));
+        writeLine(chalk.green('=================='));
         this.accounts.forEach((account, index) => {
-            console.log(`(${index}) ${account.privateKey}`);
+            writeLine(`(${index}) ${account.privateKey}`);
         });
 
-        console.log(chalk.green('\nHD Wallet'));
-        console.log(chalk.green('=================='));
-        console.log(`Mnemonic:       surround taste account animal auto dumb label impact fork wild lawsuit dumb`);
-        console.log(`Base HD Path:   m/44'/60'/0'/0/{account_index}`);
+        await sleep(200);
 
-        console.log(chalk.green('\nGas Price'));
-        console.log(chalk.green('=================='));
-        console.log(`${this.config.gasPrice} wei`);
+        writeLine(chalk.green('\nHD Wallet'));
+        writeLine(chalk.green('=================='));
+        writeLine(`Mnemonic:       surround taste account animal auto dumb label impact fork wild lawsuit dumb`);
+        writeLine(`Base HD Path:   m/44'/60'/0'/0/{account_index}`);
 
-        console.log(chalk.green('\nGas Limit'));
-        console.log(chalk.green('=================='));
-        console.log(`${this.config.gasLimit}`);
+        await sleep(200);
 
-        console.log(chalk.green('\nListening on'));
-        console.log(chalk.green('=================='));
-        console.log(`http://127.0.0.1:${this.config.port}`);
+        writeLine(chalk.green('\nGas Price'));
+        writeLine(chalk.green('=================='));
+        writeLine(`${this.config.gasPrice} wei`);
+
+        await sleep(100);
+
+        writeLine(chalk.green('\nGas Limit'));
+        writeLine(chalk.green('=================='));
+        writeLine(`${this.config.gasLimit}`);
+
+        await sleep(100);
+
+        writeLine(chalk.green('\nListening on'));
+        writeLine(chalk.green('=================='));
+        writeLine(`http://127.0.0.1:${this.config.port}`);
     }
 
     // 模拟区块生成
     private async simulateNewBlock(): Promise<void> {
         this.currentBlock++;
         const timestamp = Math.floor(Date.now() / 1000);
-        console.log(
+        writeLine(
             chalk.dim(`Block Number: ${this.currentBlock} `) +
             chalk.dim(`Timestamp: ${timestamp}`)
         );
@@ -137,7 +148,7 @@ class GanacheSimulator {
         // 随机生成1-3笔交易
         const txCount = Math.floor(Math.random() * 3) + 1;
         for (let i = 0; i < txCount; i++) {
-            await sleep(500 * (this.config.speedFactor || 1));
+            await sleep(getRandomInt(300, 800) / (this.config.speedFactor || 1));
             await this.simulateTransaction();
         }
     }
@@ -148,23 +159,23 @@ class GanacheSimulator {
         this.generateAccounts();
         await this.printStartupInfo();
 
-        console.log(chalk.green('\nBlockchain Started'));
-        console.log(chalk.green('==================\n'));
+        writeLine(chalk.green('\nBlockchain Started'));
+        writeLine(chalk.green('==================\n'));
         const times = getRandomInt(30, 60);
 
         for (let i = 0; i < times; i++) {
             await this.simulateNewBlock();
             
             if (this.config.blockTime) {
-                await sleep(this.config.blockTime * 1000 * (this.config.speedFactor || 1));
+                await sleep(this.config.blockTime * 1000 / (this.config.speedFactor || 1));
             } else {
-                await sleep(1000 * (this.config.speedFactor || 1));
+                await sleep(getRandomInt(700, 1000) / (this.config.speedFactor || 1));
             }
     
             // 随机生成 RPC 调用日志
             if (Math.random() > 0.7) {
                 const methods = ['eth_getBalance', 'eth_getTransactionCount', 'eth_getCode', 'eth_call'];
-                console.log(chalk.dim(`\n${getRandomItem(methods)}`));
+                writeLine(chalk.dim(`\n${getRandomItem(methods)}`));
             }
         }
     }
@@ -173,9 +184,9 @@ class GanacheSimulator {
     public stop(): void {
         this.isRunning = false;
         const duration = ((Date.now() - this.startTime) / 1000).toFixed(2);
-        console.log(chalk.yellow(`\nGanache CLI stopped after ${duration}s`));
-        console.log(chalk.yellow(`Generated ${this.currentBlock} blocks`));
-        console.log(chalk.yellow(`Processed ${this.txCount} transactions`));
+        writeLine(chalk.yellow(`\nGanache CLI stopped after ${duration}s`));
+        writeLine(chalk.yellow(`Generated ${this.currentBlock} blocks`));
+        writeLine(chalk.yellow(`Processed ${this.txCount} transactions`));
     }
 }
 

@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import { loadData } from '../utils/dataLoader.js';
 import { getRandomInt, getRandomItem, sleep } from '../utils/helpers.js';
-import { oraFun, writeLine } from '../utils/environment.js';
+import { EnvDetector, oraFun, writeLine } from '../utils/environment.js';
 
 interface AppConfig {
     shouldExit: () => boolean;
@@ -71,7 +71,7 @@ async function bootlog(speedFactor = 1, config?: AppConfig) {
         
         
         spinner.stop();
-        writeLine(spinner.text);
+        EnvDetector.isBrowser() ? writeLine() : writeLine(spinner.text);
 
         // 突发模式计数
         if (burstMode) {

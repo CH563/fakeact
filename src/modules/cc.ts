@@ -1,7 +1,6 @@
-import chalk from 'chalk';
 import { loadData } from '../utils/dataLoader.js';
 import { getRandomInt, sleep } from '../utils/helpers.js';
-import path from 'path';
+import { writeLine } from '../utils/environment.js';
 
 // Constants
 const COMPILERS = ['gcc', 'clang'];
@@ -47,7 +46,8 @@ function generateIncludes(fileList: string[], max: number): string {
     const includeFlags = new Set<string>();
     
     for (const file of fileList) {
-        const dir = path.dirname(file);
+        const fileArr = file.split('/');
+        const dir = fileArr.slice(0, -1).join('/');
         if (dir !== '.') {
             includeFlags.add(dir);
         }
@@ -68,11 +68,11 @@ function generateRandomFlags(flags: string[], maxCount: number): string {
 }
 
 async function print(message: string): Promise<void> {
-    console.log(message);
+    writeLine(message);
 }
 
 async function newline(): Promise<void> {
-    console.log('');
+    writeLine('');
 }
 
 async function cc(config: AppConfig = { shouldExit: false }, speedFactor: number = 1): Promise<void> {

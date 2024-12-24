@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import { loadData } from '../utils/dataLoader.js';
-import { sleep, chooseMultipleRandom, getRandomItem, genPackageVersion } from '../utils/helpers.js';
-import { randomInt } from 'crypto';
+import { sleep, chooseMultipleRandom, getRandomInt, getRandomItem, genPackageVersion } from '../utils/helpers.js';
+import { write, writeLine } from '../utils/environment.js';
 
 interface AppConfig {
     shouldExit: boolean;
@@ -16,19 +16,19 @@ const MAX_SPINNER_LOOPS: number = 20;
 // Helper function to simulate delayed printing
 async function dprint(text: string, delay: number): Promise<void> {
     for (const char of text) {
-        process.stdout.write(char);
+        write(char);
         await sleep(delay);
     }
 }
 
 // Helper function to print with newline
 async function print(text: string): Promise<void> {
-    process.stdout.write(text);
+    write(text);
 }
 
 // Helper function to print newline
 async function newline(): Promise<void> {
-    process.stdout.write('\n');
+    writeLine();
 }
 
 // Main simcity function
@@ -66,16 +66,16 @@ async function simcity(speedFactor: number = 1, config: AppConfig = { shouldExit
                 const msg = `${currentSimcity}... ${spinner}`;
 
                 if (isFirstPrint) {
-                    await print(uncheckedCheckbox);
+                    print(uncheckedCheckbox);
                     await dprint(msg, TEXT_SLEEP);
                     isFirstPrint = false;
                 } else {
-                    await print(uncheckedCheckbox);
-                    await print(msg);
+                    print(uncheckedCheckbox);
+                    print(msg);
                 }
 
                 await sleep(SPINNER_SLEEP);
-                await print('\r');
+                print('\r');
 
                 if (config.shouldExit) {
                     resolution = 'ABORTED';
@@ -101,11 +101,11 @@ async function simcity(speedFactor: number = 1, config: AppConfig = { shouldExit
 
         // Print final status
         await dprint(checkedCheckbox, 10);
-        await sleep(randomInt(10, 100) / speedFactor);
+        await sleep(getRandomInt(10, 100) / speedFactor);
         await print(colorFunc(`${currentSimcity}... ${resolution}`));
 
         if (config.shouldExit) {
-            await print('\nALL DONE\n');
+            await writeLine('ALL DONE');
             return;
         }
         await newline();

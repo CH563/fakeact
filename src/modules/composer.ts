@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import { loadData } from '../utils/dataLoader.js';
 import { getRandomInt, sleep } from '../utils/helpers.js';
+import { writeLine } from '../utils/environment.js';
 
 // 生成包的版本号
 function generatePackageVersion(): string {
@@ -48,15 +49,15 @@ async function composer(speedFactor = 1): Promise<void> {
             }));
 
         // 输出初始信息
-        console.log(chalk.green('Loading composer repositories with package information'));
-        console.log(chalk.green('Updating dependencies (including require-dev)'));
+        writeLine(chalk.green('Loading composer repositories with package information'));
+        writeLine(chalk.green('Updating dependencies (including require-dev)'));
 
         // 安装包
         for (const pkg of chosenPackages) {
             const sleepTime = getRandomInt(100, 2000) / speedFactor;
             
             // 显示安装信息
-            console.log(
+            writeLine(
                 `  - Installing ${chalk.green(pkg.name)} (${chalk.yellow(pkg.version)}): Loading from cache`
             );
             
@@ -64,8 +65,8 @@ async function composer(speedFactor = 1): Promise<void> {
         }
 
         // 输出完成信息
-        console.log(chalk.green('Writing lock file'));
-        console.log(chalk.green('Generating autoload files'));
+        writeLine(chalk.green('Writing lock file'));
+        writeLine(chalk.green('Generating autoload files'));
 
     } catch (error) {
         console.error(chalk.red('Error during composer installation:'), error);

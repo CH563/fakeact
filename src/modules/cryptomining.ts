@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import { getRandomInt, sleep, generateHexString, normalDistribution, getCurrentTime } from '../utils/helpers.js';
+import { writeLine } from '../utils/environment.js';
 
 interface MiningStats {
     solutionsFound: number;
@@ -36,7 +37,7 @@ async function cryptomining(speedFactor: number = 1): Promise<void> {
             remainingUntilNewJob = newJobEveryNLines;
             const info = chalk.cyan.bold('ℹ');
             
-            console.log(
+            writeLine(
                 `${info}  ${timeFormatted}${separator}${chalk.blue('stratum')}    ` +
                 `Received new job #${generateHexString(8)}  ` +
                 `seed: #${generateHexString(32)}  ` +
@@ -48,15 +49,15 @@ async function cryptomining(speedFactor: number = 1): Promise<void> {
             numSolutionsFound++;
             const info = chalk.cyan.bold('ℹ');
 
-            console.log(
+            writeLine(
                 `${info}  ${timeFormatted}${separator}${chalk.blue('CUDA0')}     ` +
                 `Solution found; Submitted to stratum.buttcoin.org`
             );
-            console.log(
+            writeLine(
                 `${info}  ${timeFormatted}${separator}${chalk.blue('CUDA0')}     ` +
                 `Nonce: 0x${generateHexString(16)}`
             );
-            console.log(
+            writeLine(
                 `${info}  ${timeFormatted}${separator}${chalk.blue('stratum')}    ` +
                 `${chalk.green('Accepted.')}`
             );
@@ -84,7 +85,7 @@ async function cryptomining(speedFactor: number = 1): Promise<void> {
             const elapsedFormatted = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
             const speed = `Speed ${chalk.cyan.bold(totalMhs.toFixed(2))} Mh/s`;
 
-            console.log(
+            writeLine(
                 `${info}  ${timeFormatted}${separator}${chalk.blue('cryptominer')} ` +
                 `${speed}    ${gpuStats}  ` +
                 `[A${numSolutionsFound}+0:R0+0:F0] Time: ${elapsedFormatted}`

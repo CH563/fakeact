@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import { loadData } from '../utils/dataLoader.js';
 import { getRandomInt, sleep } from '../utils/helpers.js';
+import { writeLine } from '../utils/environment.js';
 
 // Architecture options
 const ARCHES = [
@@ -120,7 +121,7 @@ async function kernelCompile(config: AppConfig = {}, speedFactor = 1) {
             }
             
             const line = genLine(arch, CFILES_LIST);
-            console.log(chalk.white(line));
+            writeLine(chalk.white(line));
             
             // Random sleep between lines
             const sleepLength = getRandomInt(10, 1000) / speedFactor;
@@ -128,21 +129,21 @@ async function kernelCompile(config: AppConfig = {}, speedFactor = 1) {
         }
         
         // Final build steps
-        console.log(chalk.white(`BUILD   arch/${arch}/boot/bzImage`));
-        console.log();
+        writeLine(chalk.white(`BUILD   arch/${arch}/boot/bzImage`));
+        writeLine();
         
         const bytes = getRandomInt(9000, 1000000);
         const paddedBytes = getRandomInt(bytes, 1100000);
-        console.log(chalk.white(`Setup is ${bytes} bytes (padded to ${paddedBytes} bytes).`));
+        writeLine(chalk.white(`Setup is ${bytes} bytes (padded to ${paddedBytes} bytes).`));
         
         const system = getRandomInt(300, 3000);
-        console.log(chalk.white(`System is ${system} kB`));
+        writeLine(chalk.white(`System is ${system} kB`));
         
         const crc = getRandomInt(0x10000000, 0xffffffff);
-        console.log(chalk.white(`CRC ${crc.toString(16)}`));
+        writeLine(chalk.white(`CRC ${crc.toString(16)}`));
         
-        console.log(chalk.white(`Kernel: arch/${arch}/boot/bzImage is ready (#1)`));
-        console.log();
+        writeLine(chalk.white(`Kernel: arch/${arch}/boot/bzImage is ready (#1)`));
+        writeLine();
         
     } catch (error) {
         console.error('Error during kernel compilation:', error);
