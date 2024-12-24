@@ -15,6 +15,7 @@
     "@xterm/addon-web-links": "^0.11.0",
     "@xterm/xterm": "^5.5.0",
     "astro": "^5.1.0",
+    "chalk": "^5.4.1",
     "tailwindcss": "^3.4.17"
   }
 }

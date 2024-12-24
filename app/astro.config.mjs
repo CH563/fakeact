@@ -7,5 +7,12 @@ import cloudflare from '@astrojs/cloudflare';
 export default defineConfig({
   output: 'server',
   adapter: cloudflare(),
-  integrations: [tailwind()]
+  integrations: [tailwind()],
+  vite: {
+    build: {
+      rollupOptions: {
+        external: ['fs', 'path', 'url'],
+      }
+    }
+  }
 });
