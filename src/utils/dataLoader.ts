@@ -67,7 +67,7 @@ async function loadDataFile(filename: string): Promise<string[]> {
 };
 
 const getVersions = (data: any) => {
-    const versions = [];
+    const versions: string[] = [];
     Object.keys(data).map(key => {
         if (key !== 'AAindex' && key !== '1cd36ffe') {
             versions.push(data[key])
