@@ -1,30 +1,49 @@
 ---
 import Layout from '../layouts/Layout.astro';
+const modules = [
+	'ansible',
+	'bootlog',
+	'botnet',
+	'bruteforce',
+	'cargo',
+	'cc',
+	'composer',
+	'cryptomining',
+	'ganache',
+	'kernelCompile',
+	'memdump',
+	'mkinitcpio',
+	'pip',
+	'nextBuild',
+	'rkhunter',
+	'simcity',
+	'terraform'
+].sort();
 ---
 
 <Layout>
 	<div class="p-5 w-full h-full" style=`background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(148 163 184 / 0.05)'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e")`>
-		<h1 class="text-white font-extrabold text-center text-4xl p-6">Fakeact</h1>
-		<p class="text-gray-300 text-center mb-4">🐟命令行摸鱼神器，模拟各种下载安装编译的日志实时输出，假装很忙，摸鱼不慌张</p>
-		<h2 class="border-b border-gray-600 p-2 text-center">支持以下模块</h2>
-		<div class="p-2 flex flex-col gap-2">
-			<a class="justify-center inline-block text-center rounded-sm text-sm font-semibold py-3 px-4 bg-slate-800 text-white hover:bg-slate-700" href="/module/ansible">ansible</a>
-			<a class="justify-center inline-block text-center rounded-sm text-sm font-semibold py-3 px-4 bg-slate-800 text-white hover:bg-slate-700" href="/module/bootlog">bootlog</a>
-			<a class="justify-center inline-block text-center rounded-sm text-sm font-semibold py-3 px-4 bg-slate-800 text-white hover:bg-slate-700" href="/module/botnet">botnet</a>
-			<a class="justify-center inline-block text-center rounded-sm text-sm font-semibold py-3 px-4 bg-slate-800 text-white hover:bg-slate-700" href="/module/bruteforce">bruteforce</a>
-			<a class="justify-center inline-block text-center rounded-sm text-sm font-semibold py-3 px-4 bg-slate-800 text-white hover:bg-slate-700" href="/module/cargo">cargo</a>
-			<a class="justify-center inline-block text-center rounded-sm text-sm font-semibold py-3 px-4 bg-slate-800 text-white hover:bg-slate-700" href="/module/cc">cc</a>
-			<a class="justify-center inline-block text-center rounded-sm text-sm font-semibold py-3 px-4 bg-slate-800 text-white hover:bg-slate-700" href="/module/composer">composer</a>
-			<a class="justify-center inline-block text-center rounded-sm text-sm font-semibold py-3 px-4 bg-slate-800 text-white hover:bg-slate-700" href="/module/cryptomining">cryptomining</a>
-			<a class="justify-center inline-block text-center rounded-sm text-sm font-semibold py-3 px-4 bg-slate-800 text-white hover:bg-slate-700" href="/module/ganache">ganache</a>
-			<a class="justify-center inline-block text-center rounded-sm text-sm font-semibold py-3 px-4 bg-slate-800 text-white hover:bg-slate-700" href="/module/kernelCompile">kernelCompile</a>
-			<a class="justify-center inline-block text-center rounded-sm text-sm font-semibold py-3 px-4 bg-slate-800 text-white hover:bg-slate-700" href="/module/memdump">memdump</a>
-			<a class="justify-center inline-block text-center rounded-sm text-sm font-semibold py-3 px-4 bg-slate-800 text-white hover:bg-slate-700" href="/module/mkinitcpio">mkinitcpio</a>
-			<a class="justify-center inline-block text-center rounded-sm text-sm font-semibold py-3 px-4 bg-slate-800 text-white hover:bg-slate-700" href="/module/pip">pip</a>
-			<a class="justify-center inline-block text-center rounded-sm text-sm font-semibold py-3 px-4 bg-slate-800 text-white hover:bg-slate-700" href="/module/nextBuild">nextBuild</a>
-			<a class="justify-center inline-block text-center rounded-sm text-sm font-semibold py-3 px-4 bg-slate-800 text-white hover:bg-slate-700" href="/module/rkhunter">rkhunter</a>
-			<a class="justify-center inline-block text-center rounded-sm text-sm font-semibold py-3 px-4 bg-slate-800 text-white hover:bg-slate-700" href="/module/simcity">simcity</a>
-			<a class="justify-center inline-block text-center rounded-sm text-sm font-semibold py-3 px-4 bg-slate-800 text-white hover:bg-slate-700" href="/module/terraform">terraform</a>
+		<div class="container mx-auto max-w-xl">
+			<div class="pt-20">
+				<img class="mx-auto w-10" src="/favicon.svg" alt="Fakeact" />
+			</div>
+			<h1 class="font-extrabold text-center text-xl pb-6 text-green-500">Fakeact</h1>
+			<h2 class="text-gray-100 font-semibold text-3xl text-center mb-4">Command line fake tool,<br> fake framework logs output</h2>
+			<p class="text-gray-400 text-sm text-center mb-6">🐟命令行摸鱼神器，模拟各种下载安装编译的日志实时输出，假装很忙，摸鱼不慌张</p>
+			<div class="text-gray-200 text-sm text-center">Installation</div>
+			<div class="text-center">
+				<div class="inline-block border border-gray-800 font-semibold my-2 bg-gray-900 rounded-md px-4 py-1 bg-gradient-to-b from-transparent to-gray-950 hover:from-white/5">npm install fakeact -g</div>
+				<a href="https://github.com/CH563/fakeact" target="_blank" class="inline-block border ml-2 border-gray-800 font-semibold my-2 bg-gray-900 rounded-md px-3 py-1 bg-gradient-to-b from-transparent to-gray-950 hover:from-white/10">
+					<span class="inline-block w-5 h-5 align-middle" style=`background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1naXRodWIiPjxwYXRoIGQ9Ik0xNSAyMnYtNGE0LjggNC44IDAgMCAwLTEtMy41YzMgMCA2LTIgNi01LjUuMDgtMS4yNS0uMjctMi40OC0xLTMuNS4yOC0xLjE1LjI4LTIuMzUgMC0zLjUgMCAwLTEgMC0zIDEuNS0yLjY0LS41LTUuMzYtLjUtOCAwQzYgMiA1IDIgNSAyYy0uMyAxLjE1LS4zIDIuMzUgMCAzLjVBNS40MDMgNS40MDMgMCAwIDAgNCA5YzAgMy41IDMgNS41IDYgNS41LS4zOS40OS0uNjggMS4wNS0uODUgMS42NS0uMTcuNi0uMjIgMS4yMy0uMTUgMS44NXY0Ii8+PHBhdGggZD0iTTkgMThjLTQuNTEgMi01LTItNy0yIi8+PC9zdmc+");background-size:100%`></span>
+				</a>
+			</div>
+			<h2 class="border-b border-gray-600 p-2 font-semibold text-md text-center pt-10 uppercase">Run online modules</h2>
+			<div class="py-3 grid grid-cols-3 gap-3">
+				{modules.map((module) => (
+					<a class="justify-center inline-block text-center rounded-sm text-sm font-semibold py-3 px-4 bg-slate-800 text-white hover:bg-slate-700" href={`/module/${module}`}>{module}</a>
+				))}
+				<a class="justify-center inline-block border border-dashed text-gray-500 border-gray-700 hover:border-gray-600 hover:text-gray-400 text-center rounded-sm text-sm font-semibold py-3 px-4 " href="https://github.com/CH563/fakeact/pulls" target="_blank">+ ADD YOUR</a>
+			</div>
 		</div>
 	</div>
 </Layout>
