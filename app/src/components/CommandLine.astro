@@ -9,6 +9,8 @@ const { module } = Astro.props;
 
 <script>
     import '/node_modules/@xterm/xterm/css/xterm.css';
+    import chalk from 'chalk';
+    import logoStr from '../utils/logo';
     import { Terminal } from '@xterm/xterm';
     import { FitAddon } from '@xterm/addon-fit';
     import { WebLinksAddon } from '@xterm/addon-web-links';
@@ -42,7 +44,20 @@ const { module } = Astro.props;
         terminal.loadAddon(new WebLinksAddon());
         terminal.open(container);
         fitAddon.fit();
+        window.addEventListener('resize', () => fitAddon.fit());
+        terminal.onKey((e) => {
+            if (e.domEvent.key === 'c' && e.domEvent.ctrlKey) {
+                terminal.writeln(chalk.bold('Exiting...'));
+                setTimeout(() => {
+                    terminal.dispose();
+                    window.location.href = '/';
+                }, 200);
+            }
+        });
         (async() => {
+            logoStr.split('\n').forEach((line) => terminal.writeln(line));
+            terminal.writeln(chalk.bold(' Press Ctrl + C to exit...'));
+            terminal.writeln('');
             while(true) {
                 if (module === 'ansible') await ansible();
                 if (module === 'bootlog') await bootlog();
