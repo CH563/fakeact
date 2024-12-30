@@ -1,12 +1,46 @@
+---
+import { SEO } from 'astro-seo';
+const { pathname, origin } = Astro.url;
+const resolvedImageWithDomain = `${origin}/image.png`;
+const canonicalURL = new URL(pathname, origin);
+const { title, description, image } = Astro.props;
+const headTitle = title || 'Fakeact';
+const headDesc = description || 'Command line fake tool, fake framework logs output';
+const ogImage = image || resolvedImageWithDomain;
+---
+
 <!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="description" content="Command line fake tool, fake framework logs output" />
 		<meta name="keywords" content="fake,cli,command line,logs,fakeact" />
-		<title>Fakeact</title>
+		<link rel="sitemap" href="/sitemap-index.xml" />
+		<SEO
+            title={headTitle}
+            description={headDesc}
+            canonical={canonicalURL}
+            twitter={{
+                creator: '@LiWen563',
+                site: '@LiWen563',
+                card: 'summary_large_image',
+                imageAlt: headTitle,
+                description: headDesc,
+            }}
+            openGraph={{
+                basic: {
+                    url: canonicalURL,
+                    type: 'website',
+                    title: headTitle,
+                    image: ogImage,
+                },
+                image: {
+                    url: ogImage,
+                    alt: headTitle,
+                },
+            }}
+        />
 	</head>
 	<body class="bg-black w-full h-screen">
 		<slot />

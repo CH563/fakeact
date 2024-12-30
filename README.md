@@ -1,46 +1,48 @@
-# Fakeact - 命令行摸鱼神器
+![](https://github.com/CH563/fakeact/blob/web/app/public/favicon.svg)
+
+# Fakeact - Command line fake tool, fake framework logs output
 
 [![Stars](https://img.shields.io/github/stars/CH563/fakeact.svg)](https://github.com/CH563/fakeact/stargazers)
 [![npm](https://img.shields.io/npm/v/fakeact.svg)](https://www.npmjs.com/package/fakeact) 
 [![npm downloads](https://img.shields.io/npm/dm/fakeact?color=blue&label=npm%20downloads)](https://www.npmjs.com/package/fakeact)
 [![license](http://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/CH563/fakeact/blob/main/LICENSE)
 
-> 参考Rust版 [Genact](https://github.com/svenstaro/genact) 实现，日志数据也来源于该项目
+Website: [https://fakeact.fun](https://fakeact.fun)
 
-🐟模拟各种下载安装编译的日志实时输出，假装很忙，摸鱼不慌张
+🐟Fake live output of various installation and compilation logs, pretending to be busy to make you look professional, but not doing anything
 
-运行后，只是模拟日志打印输出，**不会处理或安装任何数据**，让命令行输出看起来很专业和处于忙碌状态
+When run, it just fake log printout and **doesn't process or install any data**, making the command line output look professional and in a busy state
 
 ![](https://github.com/CH563/fakeact/blob/main/gifs/download.gif)
 ![](https://github.com/CH563/fakeact/blob/main/gifs/composer.gif)
 
 
-### 按需运行
+### Running on-demand
 
-使用 `npx` 运行该脚本而无需先安装：
+Using `npx` ou can run the script without installing it first:
 
 ```bash
 npx fakeact
 ```
 
-### 全局安装
+### Installation
 
 ```bash
 npm install fakeact -g
 ```
 
-全局安装 `fakeact` ，可以直接运行 fakeact 使用
+This will install `fakeact` globally so that it may be run from the command line anywhere.
 
 
-### Docker运行
+### Run in Docker
 
 ```bash
 docker run -it --rm ch563/fakeact -m composer
 ```
 
-修改 -m 或 增加参数运行不同 module, 参考以下使用说明
+Modify -m or add parameters to run different modules
 
-### 使用
+### Usage
 
     A command line fake active tool
 
@@ -57,44 +59,44 @@ docker run -it --rm ch563/fakeact -m composer
       -V, --version                                    display version
 
 
-### 支持模拟运行模块
+### Support modules
 
-- [x] ansible - 模拟Ansible部署日志
-- [x] bootlog - 模拟系统启动日志
-- [x] botnet - 模拟僵尸网络活动日志
-- [x] bruteforce - 模拟暴力破解日志
-- [x] cargo - 模拟Rust Cargo构建日志
-- [x] cc - 模拟C/C++编译日志
-- [x] composer - 模拟PHP Composer安装日志
-- [x] cryptomining - 模拟加密货币挖矿日志
-- [x] dockerBuild - 模拟Docker构建日志
-- [x] dockerImageRm - 模拟Docker镜像删除日志
-- [x] download - 模拟文件下载日志
-- [x] julia - 模拟Julia包管理器日志
-- [x] kernelCompile - 模拟内核编译日志
-- [x] memdump - 模拟内存转储日志
-- [x] mkinitcpio - 模拟initramfs生成日志
-- [x] rkhunter - 模拟rootkit扫描日志
-- [x] simcity - 模拟SimCity游戏日志
-- [x] terraform - 模拟Terraform部署日志
-- [x] weblog - 模拟Web服务器访问日志
-- [x] npm - 模拟NPM安装过程日志
-- [x] nextBuild - 模拟nextjs build日志
-- [x] ganache - 模拟ganache-cli区块链初始化、账户信息、交易日志
-- [x] pip - 模拟pip install日志
+- [x] ansible - Ansible Deployment Log Simulator | DevOps Testing Tool
+- [x] bootlog - System Boot Log Simulator | Linux Startup Log Generator
+- [x] botnet - Botnet Activity Log Generator | Network Security Testing
+- [x] bruteforce - Brute Force Attack Log Simulator | Security Testing Tool
+- [x] cargo - Rust Cargo Build Log Generator | Development Testing Tool
+- [x] cc - C/C++ Compilation Log Generator | Build Process Simulator
+- [x] composer - PHP Composer Log Generator | Package Installation Simulator
+- [x] cryptomining - Cryptocurrency Mining Log Generator | Blockchain Tool
+- [x] dockerBuild - Docker Build Log Generator | Container Build Simulator
+- [x] dockerImageRm - Docker Image Removal Log Generator | Container Management
+- [x] download - File Download Log Generator | Network Transfer Simulator
+- [x] julia - Julia Package Manager Log Simulator | Scientific Computing
+- [x] kernelCompile - Linux Kernel Compilation Log Generator | System Development
+- [x] memdump - Memory Dump Log Generator | System Analysis Tool
+- [x] mkinitcpio - Initramfs Generation Log Simulator | Linux Boot Tool
+- [x] rkhunter - Rootkit Scanner Log Generator | Security Analysis Tool
+- [x] simcity - SimCity Game Log Generator | Gaming Development Tool
+- [x] terraform - Terraform Deployment Log Generator | Infrastructure as Code
+- [x] weblog - Web Server Access Log Generator | Website Analytics Tool
+- [x] npm - NPM Installation Log Generator | Node.js Development Tool
+- [x] nextBuild - Next.js Build Log Generator | React Framework Tool
+- [x] ganache - Ganache Blockchain Log Generator | Ethereum Development
+- [x] pip - Pip Installation Log Generator | Python Package Tool
 
-### 本地构建
+### Building
 
-通过git clone下载源码，构建运行，为了模块共同减少空间推荐使用 `pnpm`:
+git clone and `pnpm`:
 
     git clone https://github.com/CH563/fakeact.git
     cd fakeact
     pnpm install
     pnpm run build
 
-## TODO
+## Thanks to
 
-网页版，使用 `xtermjs` 在网页上运行输出
+inspired credit to Rust [Genact](https://github.com/svenstaro/genact), and Log data
 
 ## License
 
