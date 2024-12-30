@@ -1,0 +1,12 @@
+---
+import CommandLine from '../../components/CommandLine.astro';
+import Layout from '../../layouts/Layout.astro';
+import headline from '../../utils/headline';
+const { module } = Astro.params;
+const title = module && headline[module] ? headline[module].title : 'Fakeact';
+const description = module && headline[module] ? headline[module].desc : 'Fakeact module';
+---
+
+<Layout title={title} description={description}>
+	<CommandLine module={module} />
+</Layout>

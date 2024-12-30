@@ -2,6 +2,7 @@ import { loadData, EXTENSIONS_LIST } from '../utils/dataLoader.js';
 import { getRandomInt, sleep } from '../utils/helpers.js';
 import { faker } from '@faker-js/faker';
 import dayjs from 'dayjs';
+import { writeLine } from '../utils/environment.js';
 
 // Constants
 const HTTP_CODES = [200, 201, 400, 401, 403, 404, 500, 502, 503];
@@ -19,7 +20,7 @@ function generateFilePath(packagesList: string[], extensionsList: string[]): str
     return `/${dirs.join('/')}/${pkg}${extension}`;
 }
 
-async function weblog(speedFactor: 1, config: AppConfig = { shouldExit: false }): Promise<void> {
+async function weblog(speedFactor: number = 1, config: AppConfig = { shouldExit: false }): Promise<void> {
     // Load package data
     const PACKAGES_LIST = await loadData('packages');
     
@@ -66,7 +67,7 @@ async function weblog(speedFactor: 1, config: AppConfig = { shouldExit: false })
         }
 
         // Print line
-        console.log(line);
+        writeLine(line);
 
         if (burstMode) {
             countBurstLines++;

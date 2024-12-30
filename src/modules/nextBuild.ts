@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import { sleep, getRandomItem, getRandomBuildTime, getRandomFileSize, getRandomInt } from '../utils/helpers.js';
 import { generatePages, WARNING_MESSAGES, ERROR_MESSAGES, INFO_MESSAGES } from '../utils/pageLists.js';
+import { writeLine } from '../utils/environment.js';
 
 interface BuildConfig {
     shouldFail?: boolean;
@@ -41,7 +42,7 @@ class NextjsBuildSimulator {
             error: chalk.red('error'),
         }[type];
 
-        console.log(`${prefix}  - ${message}`);
+        writeLine(`${prefix}  - ${message}`);
         await sleep(50 * (this.config.speedFactor || 1));
     }
 
@@ -68,7 +69,7 @@ class NextjsBuildSimulator {
             );
         }
 
-        console.log(
+        writeLine(
             `${line}○ ${chalk.dim(page)}${' '.repeat(Math.max(1, 40 - page.length))}` +
             `${size} kB${' '.repeat(8)}${buildTime}s`
         );
@@ -80,7 +81,7 @@ class NextjsBuildSimulator {
     }
 
     public async simulate(): Promise<void> {
-        console.log(chalk.bold('\n🔥 Next.js Build Simulator\n'));
+        writeLine(chalk.bold('\n🔥 Next.js Build Simulator\n'));
         
         await this.log('Creating an optimized production build...');
         
@@ -90,9 +91,9 @@ class NextjsBuildSimulator {
             await sleep(500 / (this.config.speedFactor || 1));
 
             if (phase === BuildPhase.COMPILE) {
-                console.log('\nCompiling pages...\n');
-                console.log(`${chalk.underline('Page')}${' '.repeat(42)}${chalk.underline('Size')}${' '.repeat(12)}${chalk.underline('Times')}`)
-                console.log(`├── ○ ${chalk.dim('/')}`)
+                writeLine('\nCompiling pages...\n');
+                writeLine(`${chalk.underline('Page')}${' '.repeat(42)}${chalk.underline('Size')}${' '.repeat(12)}${chalk.underline('Times')}`)
+                writeLine(`├── ○ ${chalk.dim('/')}`)
                 const pages = this.getRandomPages();
                 for (const page of pages) {
                     await this.simulatePageCompilation(page);
@@ -108,19 +109,18 @@ class NextjsBuildSimulator {
 
         // 构建完成统计
         const duration = ((Date.now() - this.startTime) / 1000).toFixed(2);
-        console.log('\n' + '─'.repeat(50));
+        writeLine('\n' + '─'.repeat(50));
 
         if (this.hasErrors) {
-            console.log(chalk.red(`\n✗ Failed to compile in ${duration}s`));
-            console.log(chalk.red('\nFound errors in your application:'));
-            process.exit(1);
+            writeLine(chalk.red(`\n✗ Failed to compile in ${duration}s`));
+            writeLine(chalk.red('\nFound errors in your application:'));
         } else {
-            console.log(chalk.green(`\n✓ Compiled successfully in ${duration}s`));
-            console.log(`\n○ Pages: ${this.totalPages}`);
+            writeLine(chalk.green(`\n✓ Compiled successfully in ${duration}s`));
+            writeLine(`\n○ Pages: ${this.totalPages}`);
             if (this.hasWarnings) {
-                console.log(chalk.yellow('\n⚠ Found some non-critical issues (see above)'));
+                writeLine(chalk.yellow('\n⚠ Found some non-critical issues (see above)'));
             }
-            console.log(chalk.green('\n✨ Done!'));
+            writeLine(chalk.green('\n✨ Done!'));
         }
     }
 }

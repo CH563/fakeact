@@ -1,0 +1,163 @@
+---
+import Layout from '../layouts/Layout.astro';
+const modules = [
+    'ansible',
+    'bootlog',
+    'botnet',
+    'bruteforce',
+    'cargo',
+    'cc',
+    'composer',
+    'cryptomining',
+    'ganache',
+    'kernelCompile',
+    'memdump',
+    'mkinitcpio',
+    'pip',
+    'nextBuild',
+    'rkhunter',
+    'simcity',
+    'terraform',
+].sort();
+---
+
+<Layout>
+    <div
+        class='p-5'
+        style=`background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(148 163 184 / 0.05)'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e")`
+    >
+        <div class='container mx-auto max-w-xl'>
+            <div class='pt-20'>
+                <img class='mx-auto w-10' src='/favicon.svg' alt='Fakeact' title="Fakeact" />
+            </div>
+            <h1 class='font-extrabold text-center text-xl pb-6 text-green-500'>
+                Fakeact
+            </h1>
+            <h2 class='text-gray-100 font-semibold text-3xl text-center mb-4'>
+                Command line fake tool,<br /> fake framework logs output
+            </h2>
+            <p class='text-gray-400 text-sm text-center mb-6'>
+                🐟Fake live output of various installation and compilation logs,
+                pretending to be busy to make you look professional, but not
+                doing anything
+            </p>
+            <div class='text-gray-200 text-sm text-center'>Installation</div>
+            <div class='text-center'>
+                <div
+                    class='inline-block border border-gray-800 font-semibold my-2 bg-gray-900 rounded-md px-4 py-1 bg-gradient-to-b from-transparent to-gray-950 hover:from-white/5'
+                >
+                    npm install fakeact -g
+                </div>
+                <a
+                    href='https://github.com/CH563/fakeact'
+                    target='_blank'
+                    class='inline-block border ml-2 border-gray-800 font-semibold my-2 bg-gray-900 rounded-md px-3 py-1 bg-gradient-to-b from-transparent to-gray-950 hover:from-white/10'
+                >
+                    <span
+                        class='inline-block w-5 h-5 align-middle'
+                        style=`background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1naXRodWIiPjxwYXRoIGQ9Ik0xNSAyMnYtNGE0LjggNC44IDAgMCAwLTEtMy41YzMgMCA2LTIgNi01LjUuMDgtMS4yNS0uMjctMi40OC0xLTMuNS4yOC0xLjE1LjI4LTIuMzUgMC0zLjUgMCAwLTEgMC0zIDEuNS0yLjY0LS41LTUuMzYtLjUtOCAwQzYgMiA1IDIgNSAyYy0uMyAxLjE1LS4zIDIuMzUgMCAzLjVBNS40MDMgNS40MDMgMCAwIDAgNCA5YzAgMy41IDMgNS41IDYgNS41LS4zOS40OS0uNjggMS4wNS0uODUgMS42NS0uMTcuNi0uMjIgMS4yMy0uMTUgMS44NXY0Ii8+PHBhdGggZD0iTTkgMThjLTQuNTEgMi01LTItNy0yIi8+PC9zdmc+");background-size:100%`
+                    ></span>
+                </a>
+                <div>
+                    <a
+                        class='text-xs text-gray-500 underline'
+                        href='https://github.com/CH563/fakeact/blob/main/README.md'
+                        target='_blank'>More installation and use</a
+                    >
+                </div>
+            </div>
+            <h2
+                class='border-b border-gray-600 p-2 font-semibold text-md text-center pt-6 uppercase'
+            >
+                Run online modules
+            </h2>
+            <div class='py-3 grid grid-cols-3 gap-3'>
+                {
+                    modules.map((module) => (
+                        <a
+                            class='justify-center inline-block text-center rounded-sm text-sm font-semibold py-3 px-4 bg-slate-800 text-white hover:bg-slate-700'
+                            href={`/module/${module}`}
+                        >
+                            {module}
+                        </a>
+                    ))
+                }
+                <a
+                    class='justify-center inline-block border border-dashed text-gray-500 border-gray-700 hover:border-gray-600 hover:text-gray-400 text-center rounded-sm text-sm font-semibold py-3 px-4'
+                    href='https://github.com/CH563/fakeact/pulls'
+                    target='_blank'>+ ADD YOUR</a
+                >
+            </div>
+            <h2 class='border-gray-600 font-semibold text-xl pt-16 pb-4'>
+                How dose it work?
+            </h2>
+            <ul class='list-none text-md text-gray-500 grid gap-1 pb-6'>
+                <li>
+                    1. Run the command line tool <code>fakeact</code> in the terminal
+                </li>
+                <li>2. Select the module you want to run</li>
+                <li>3. Enjoy the fake logs output</li>
+                <li>4. Press <code>Ctrl + C</code> to exit</li>
+                <li>
+                    5. Just fake log printout, no data is processed or installed
+                </li>
+            </ul>
+            <div class='flex justify-center pl-4'>
+                <img src='/runLine.svg' alt="also run" title="you can also run" />
+            </div>
+            <h3 class='text-center text-md p-2 pt-4'>Run in docker</h3>
+            <div class='flex justify-center p-2'>
+                <div
+                    class='border border-dashed text-sm border-gray-700 py-2 px-4 rounded-md bg-gray-900'
+                >
+                    docker run -it --rm ch563/fakeact -m composer
+                </div>
+            </div>
+            <div class='text-xs text-gray-500 text-center'>
+                Modify -m or add parameters to run different modules
+            </div>
+            <div class='h-28 overflow-hidden border-b border-gray-800'>
+                <div class='w-40 h-10 mt-20 mx-auto bg-green-500 blur-3xl'>
+                </div>
+            </div>
+            <h2 class='border-gray-600 font-semibold text-xl pt-16 pb-4'>
+                Usage
+            </h2>
+            <div class='text-gray-200 text-sm text-left mb-6'>
+                Run the command line tool <code>fakeact</code> in the terminal
+            </div>
+            <div
+                class='border border-dashed text-xs border-gray-700 py-2 px-4 rounded-md bg-gray-900 overflow-hidden'
+            >
+                <div class='grid grid-cols-2 gap-2'>
+                    <div class='col-span-2'>Usage: fakeact [OPTIONS]</div>
+                    <div class='col-span-2'>Options:</div>
+
+                    <div>-l, --list</div>
+                    <div>list available modules</div>
+                    <div>-m, --modules &lt;modules&gt;</div>
+                    <div>
+                        run only these modules [possible values: ansible,
+                        bootlog, botnet, bruteforce, cargo, cc, composer,
+                        cryptomining, dockerBuild, dockerImageRm, download,
+                        julia, kernelCompile, memdump, mkinitcpio, rkhunter,
+                        simcity, terraform, weblog] (default: "all")
+                    </div>
+                    <div>-s, --speed-factor &lt;factor&gt;</div>
+                    <div>global speed factor (default: "1")</div>
+                    <div>-t, --times &lt;times&gt;</div>
+                    <div>execution times, 0 means infinite (default: "1")</div>
+                    <div>-h, --help</div>
+                    <div>display help for command</div>
+                    <div>-V, --version</div>
+                    <div>display version</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class='p-4'>
+        <div class='text-center text-sm text-gray-700'>
+            Copyright © 2025 Fakeact
+        </div>
+    </footer>
+</Layout>

@@ -8,8 +8,8 @@
   },
   "type": "module",
   "scripts": {
-    "start": "node dist/index.js -m dockerBuild",
-    "build": "tsc && node dist/index.js -m download",
+    "start": "tsc && node dist/index.js -m weblog",
+    "build": "cd app && npx pnpm install && npx pnpm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [

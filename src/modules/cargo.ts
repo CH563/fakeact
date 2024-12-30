@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import { loadData } from '../utils/dataLoader.js';
 import { getRandomInt, sleep } from '../utils/helpers.js';
+import { writeLine } from '../utils/environment.js';
 
 // Helper function to generate version numbers similar to Rust implementation
 function generatePackageVersion(): string {
@@ -49,7 +50,7 @@ async function cargo(speedFactor = 1): Promise<void> {
             const sleepDuration = getRandomInt(100, 2000) / speedFactor;
             
             // Print current package status
-            console.log(`${chalk.green.bold(stage.padStart(12))} ${pkg.name} v${pkg.version}`);
+            writeLine(`${chalk.green.bold(stage.padStart(12))} ${pkg.name} v${pkg.version}`);
             
             await sleep(sleepDuration);
         }
@@ -59,7 +60,7 @@ async function cargo(speedFactor = 1): Promise<void> {
     const elapsed = (Date.now() - startTime) / 1000;
     
     // Print completion message
-    console.log(
+    writeLine(
         `${chalk.green.bold('Finished'.padStart(12))} release [optimized] target(s) in ${elapsed.toFixed(2)} secs`
     );
 }

@@ -1,7 +1,7 @@
-import ora from 'ora';
 import chalk from 'chalk';
 import { loadData } from '../utils/dataLoader.js';
 import { getRandomInt, getRandomItem, sleep } from '../utils/helpers.js';
+import { EnvDetector, oraFun, writeLine } from '../utils/environment.js';
 
 interface AppConfig {
     shouldExit: () => boolean;
@@ -44,7 +44,7 @@ async function bootlog(speedFactor = 1, config?: AppConfig) {
         }
 
         // 创建spinner
-        const spinner = ora();
+        const spinner = await oraFun();
         
         // 显示日志行
         spinner.start();
@@ -71,7 +71,7 @@ async function bootlog(speedFactor = 1, config?: AppConfig) {
         
         
         spinner.stop();
-        console.log(spinner.text);
+        EnvDetector.isBrowser() ? writeLine() : writeLine(spinner.text);
 
         // 突发模式计数
         if (burstMode) {

@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import { loadData } from '../utils/dataLoader.js';
 import { getRandomInt, sleep } from '../utils/helpers.js';
+import { writeLine, getTerminalWidth } from '../utils/environment.js';
 
 // 模拟正态分布
 function normalDistribution(mean: number, stdDev: number): number {
@@ -30,11 +31,6 @@ function generateUsername(): string {
     const suffixes = ['prod', 'dev', 'staging', 'test'];
     const numbers = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
     return `${prefixes[Math.floor(Math.random() * prefixes.length)]}${numbers}${suffixes[Math.floor(Math.random() * suffixes.length)]}`;
-}
-
-// 获取终端宽度
-function getTerminalWidth(): number {
-    return process.stdout.columns || 80;
 }
 
 interface HostStatus {
@@ -77,7 +73,7 @@ async function processHosts(hosts: string[], isGather: boolean, speedFactor: num
             }
         }
 
-        console.log(chalk[status.color](status.text));
+        writeLine(chalk[status.color](status.text));
         
         const sleepTime = Math.round(normalDistribution(latencyMean, latencyStdDev));
         await sleep(sleepTime);
@@ -95,8 +91,8 @@ async function ansible(speedFactor = 1): Promise<void> {
         
         // 显示 PLAY 信息
         const playText = `PLAY [setup ${username}] `;
-        console.log(playText.padEnd(termWidth, '*'));
-        console.log();
+        writeLine(playText.padEnd(termWidth, '*'));
+        writeLine();
         await sleep(getRandomInt(1000, 3000) / speedFactor);
 
         // 生成主机列表
@@ -109,7 +105,7 @@ async function ansible(speedFactor = 1): Promise<void> {
         // Gathering Facts
         const gatheringText = 'TASK [Gathering Facts] ';
         await sleep(getRandomInt(1000, 3000) / speedFactor);
-        console.log(gatheringText.padEnd(termWidth, '*'));
+        writeLine(gatheringText.padEnd(termWidth, '*'));
         await processHosts(hosts, true, speedFactor);
         await sleep(getRandomInt(1000, 3000) / speedFactor);
 
@@ -120,10 +116,10 @@ async function ansible(speedFactor = 1): Promise<void> {
             const numTasks = getRandomInt(3, 10);
 
             for (let j = 0; j < numTasks; j++) {
-                console.log();
+                writeLine();
                 const task = ANSIBLE_TASKS_LIST[Math.floor(Math.random() * ANSIBLE_TASKS_LIST.length)];
                 const taskText = `TASK [${role} : ${task}] `;
-                console.log(taskText.padEnd(termWidth, '*'));
+                writeLine(taskText.padEnd(termWidth, '*'));
                 await sleep(getRandomInt(1000, 3000) / speedFactor);
                 await processHosts(hosts, false, speedFactor);
             }

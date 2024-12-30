@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import { getRandomInt, sleep } from '../utils/helpers.js';
+import { writeLine, write } from '../utils/environment.js';
 
 interface AppConfig {
     shouldExit: () => boolean;
@@ -7,15 +8,15 @@ interface AppConfig {
 
 // 终端控制helper函数
 const cursorUp = async (lines: number) => {
-    process.stdout.write(`\x1b[${lines}A`);
+    write(`\x1b[${lines}A`);
 };
 
 const eraseLine = async () => {
-    process.stdout.write('\x1b[2K');
+    write('\x1b[2K');
 };
 
 const print = async (text: string) => {
-    process.stdout.write(text);
+    write(text);
 };
 
 async function botnet(speedFactor = 1, config?: AppConfig) {
@@ -38,7 +39,7 @@ async function botnet(speedFactor = 1, config?: AppConfig) {
         connected++;
         await sleep(Math.pow(Math.random(), 50) * 50 * speedFactor);
     }
-    console.log(); // newline
+    writeLine(); // newline
 
     await sleep(300 * speedFactor);
 
@@ -52,7 +53,7 @@ async function botnet(speedFactor = 1, config?: AppConfig) {
             await print(char);
             await sleep(10 * speedFactor);
         }
-        console.log();
+        writeLine();
         await sleep(100 * speedFactor);
     }
 
@@ -62,15 +63,16 @@ async function botnet(speedFactor = 1, config?: AppConfig) {
             return;
         }
 
-        await cursorUp(onlines.length);
+        cursorUp(onlines.length);
         
         // 更新状态显示
         for (let i = 0; i < clusters.length; i++) {
-            await eraseLine();
+            eraseLine();
             const status = onlines[i] 
                 ? chalk.bold.green('online')
                 : chalk.bold.yellow('booting');
-            await print(`  Cluster #${i.toString().padStart(2, '0')} (${clusters[i].toString().padStart(3)} nodes) [${status}]\n`);
+            print(`  Cluster #${i.toString().padStart(2, '0')} (${clusters[i].toString().padStart(3)} nodes) [${status}]`);
+            writeLine();
         }
 
         // 检查是否所有集群都在线
@@ -116,7 +118,7 @@ async function botnet(speedFactor = 1, config?: AppConfig) {
             await print(char);
             await sleep(10 * speedFactor);
         }
-        console.log();
+        writeLine();
     }
 
     // 打印完成信息
@@ -124,7 +126,7 @@ async function botnet(speedFactor = 1, config?: AppConfig) {
         await print(char);
         await sleep(10 * speedFactor);
     }
-    console.log();
+    writeLine();
 }
 botnet.signature = './botnet.sh';
 export default botnet;
