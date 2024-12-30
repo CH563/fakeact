@@ -1,6 +1,6 @@
-![](https://github.com/CH563/fakeact/blob/web/app/public/favicon.svg)
+<img src="https://github.com/CH563/fakeact/blob/web/app/public/favicon.svg" style="width:80px">
 
-# Fakeact - Command line fake tool, fake framework logs output
+# Fakeact - Command line fake tool
 
 [![Stars](https://img.shields.io/github/stars/CH563/fakeact.svg)](https://github.com/CH563/fakeact/stargazers)
 [![npm](https://img.shields.io/npm/v/fakeact.svg)](https://www.npmjs.com/package/fakeact) 
