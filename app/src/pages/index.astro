@@ -2,25 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import shoteasy from '../assets/shoteasy.svg';
 import fakemail from '../assets/fakemail.svg';
-const modules = [
-    'ansible',
-    'bootlog',
-    'botnet',
-    'bruteforce',
-    'cargo',
-    'cc',
-    'composer',
-    'cryptomining',
-    'ganache',
-    'kernelCompile',
-    'memdump',
-    'mkinitcpio',
-    'pip',
-    'nextBuild',
-    'rkhunter',
-    'simcity',
-    'terraform',
-].sort();
+import { MODULE_LIST } from '../utils/moduleCatalog';
+const modules = MODULE_LIST;
 ---
 
 <Layout>

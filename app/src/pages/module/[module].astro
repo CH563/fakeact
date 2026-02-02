@@ -2,11 +2,148 @@
 import CommandLine from '../../components/CommandLine.astro';
 import Layout from '../../layouts/Layout.astro';
 import headline from '../../utils/headline';
+import { MODULE_GUIDES, MODULE_LIST, buildFaq } from '../../utils/moduleCatalog';
 const { module } = Astro.params;
-const title = module && headline[module] ? headline[module].title : 'Fakeact';
-const description = module && headline[module] ? headline[module].desc : 'Fakeact module';
+const moduleKey = typeof module === 'string' ? module : '';
+const isKnownModule = MODULE_LIST.includes(moduleKey);
+const guide = isKnownModule ? MODULE_GUIDES[moduleKey] : undefined;
+const meta = isKnownModule && headline[moduleKey] ? headline[moduleKey] : undefined;
+const title = meta?.title ?? 'Fakeact';
+const description = meta?.desc ?? 'Fakeact module';
+const commandExamples = isKnownModule ? [
+    `fakeact -m ${moduleKey}`,
+    `fakeact -m ${moduleKey} -s 1.5 -t 1`,
+    `docker run -it --rm ch563/fakeact -m ${moduleKey}`,
+] : [];
+const relatedModules = MODULE_LIST.filter((name) => name !== moduleKey);
+const faqItems = isKnownModule ? buildFaq(moduleKey) : [];
+const introParagraphs = guide ? [
+    `This module simulates ${guide.tags[0]}, ${guide.tags[1]}, and ${guide.tags[2]} log events with realistic pacing.`,
+    'It is designed for demos, log pipeline testing, and documentation where the real stack is unavailable.',
+    'All output is generated locally in the browser and is safe to run.',
+] : [];
 ---
 
 <Layout title={title} description={description}>
-	<CommandLine module={module} />
+    <div class="bg-black text-white">
+        <div class="container mx-auto max-w-6xl px-4 py-8">
+            <div class="flex items-center justify-between text-xs text-gray-500">
+                <a class="hover:text-gray-300" href="/">Back to home</a>
+                {isKnownModule ? <span>Module: {moduleKey}</span> : <span>Unknown module</span>}
+            </div>
+            <h1 class="mt-4 text-2xl font-semibold text-gray-100">{title}</h1>
+            <p class="mt-2 text-sm text-gray-400">{description}</p>
+
+            {guide ? (
+                <>
+                    <div class="mt-8 grid gap-6 lg:grid-cols-3">
+                        <div class="lg:col-span-2">
+                            <div class="rounded-md border border-gray-800 bg-black/60 p-2">
+                                <div class="h-[60vh] min-h-[420px]">
+                                    <CommandLine module={moduleKey} />
+                                </div>
+                            </div>
+                            <p class="mt-2 text-xs text-gray-500">
+                                Press Ctrl + C to exit. Output is simulated for demo purposes only.
+                            </p>
+                        </div>
+                        <aside class="space-y-6">
+                            <div>
+                                <h2 class="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                                    Highlights
+                                </h2>
+                                <ul class="mt-3 list-disc list-inside text-sm text-gray-300 space-y-1">
+                                    {guide.highlights.map((item) => (
+                                        <li>{item}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <div>
+                                <h2 class="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                                    Tags
+                                </h2>
+                                <div class="mt-3 flex flex-wrap gap-2">
+                                    {guide.tags.map((tag) => (
+                                        <span class="rounded-full border border-gray-700 px-2 py-1 text-xs text-gray-300">
+                                            {tag}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+                            <div>
+                                <h2 class="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                                    Quick commands
+                                </h2>
+                                <div class="mt-3 space-y-2 text-xs text-gray-300">
+                                    {commandExamples.map((cmd) => (
+                                        <div class="rounded border border-gray-800 bg-gray-950 px-3 py-2 font-mono">
+                                            {cmd}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </aside>
+                    </div>
+
+                    <div class="mt-10 grid gap-8 lg:grid-cols-2">
+                        <div class="space-y-3 text-sm text-gray-300">
+                            <h2 class="text-lg font-semibold text-gray-200">Overview</h2>
+                            {introParagraphs.map((paragraph) => (
+                                <p>{paragraph}</p>
+                            ))}
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-semibold text-gray-200">Use cases</h2>
+                            <ul class="mt-3 list-disc list-inside text-sm text-gray-300 space-y-1">
+                                {guide.scenarios.map((item) => (
+                                    <li>{item}</li>
+                                ))}
+                            </ul>
+                            <h3 class="mt-6 text-sm font-semibold text-gray-300">Notes</h3>
+                            <ul class="mt-2 list-disc list-inside text-sm text-gray-400 space-y-1">
+                                <li>All output is simulated text; no system changes are made.</li>
+                                <li>Refresh the page to restart the log stream.</li>
+                                <li>Use the CLI for longer sessions or offline demos.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <section class="mt-10">
+                        <h2 class="text-lg font-semibold text-gray-200">Sample output</h2>
+                        <pre class="mt-3 overflow-auto rounded-md border border-gray-800 bg-gray-950 p-4 text-xs text-gray-300">{guide.sampleOutput.join('\n')}</pre>
+                    </section>
+
+                    <section class="mt-10">
+                        <h2 class="text-lg font-semibold text-gray-200">FAQ</h2>
+                        <div class="mt-4 grid gap-4 lg:grid-cols-2">
+                            {faqItems.map((item) => (
+                                <div class="rounded-md border border-gray-800 bg-black/50 p-4">
+                                    <div class="text-sm font-semibold text-gray-200">{item.question}</div>
+                                    <p class="mt-2 text-sm text-gray-400">{item.answer}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+
+                    <section class="mt-10">
+                        <h2 class="text-lg font-semibold text-gray-200">Related modules</h2>
+                        <div class="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
+                            {relatedModules.map((name) => (
+                                <a
+                                    class="rounded border border-gray-800 bg-gray-950 px-3 py-2 text-xs text-gray-300 hover:border-gray-700 hover:text-white"
+                                    href={`/module/${name}`}
+                                >
+                                    {name}
+                                </a>
+                            ))}
+                        </div>
+                    </section>
+                </>
+            ) : (
+                <div class="mt-8 rounded-md border border-red-900/40 bg-red-950/30 p-4 text-sm text-red-200">
+                    This module is not available. Please choose a module from the home page.
+                </div>
+            )}
+        </div>
+    </div>
 </Layout>
