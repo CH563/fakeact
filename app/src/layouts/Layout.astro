@@ -3,10 +3,11 @@ import { SEO } from 'astro-seo';
 const { pathname, origin } = Astro.url;
 const resolvedImageWithDomain = `${origin}/image.png`;
 const canonicalURL = new URL(pathname, origin);
-const { title, description, image } = Astro.props;
-const headTitle = title || 'Fakeact';
-const headDesc = description || 'Command line fake tool, fake framework logs output';
+const { title, description, image, keywords, jsonLd } = Astro.props;
+const headTitle = title || 'Fakeact - CLI Log Simulator & Fake Framework Output Generator';
+const headDesc = description || 'Free online CLI log simulator. Generate realistic logs for Ansible, Docker, Terraform, npm, pip, and 20+ tools. Perfect for demos, testing, and documentation.';
 const ogImage = image || resolvedImageWithDomain;
+const headKeywords = keywords || 'cli log simulator, fake logs generator, devops testing tool, command line output, fakeact, log generator online, ci/cd demo tool';
 ---
 
 <!doctype html>
@@ -15,7 +16,9 @@ const ogImage = image || resolvedImageWithDomain;
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="keywords" content="fake,cli,command line,logs,fakeact" />
+		<meta name="keywords" content={headKeywords} />
+		<meta name="robots" content="index, follow" />
+		<meta name="author" content="Fakeact" />
 		<link rel="sitemap" href="/sitemap-index.xml" />
         <SEO
             title={headTitle}
@@ -41,6 +44,7 @@ const ogImage = image || resolvedImageWithDomain;
                 },
             }}
         />
+        {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4182383692865291" crossorigin="anonymous"></script>
 	</head>
 	<body class="bg-black w-full min-h-screen">

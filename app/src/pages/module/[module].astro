@@ -4,14 +4,19 @@ import Layout from '../../layouts/Layout.astro';
 import headline from '../../utils/headline';
 import Footer from '../../components/footer.astro';
 import { MODULE_GUIDES, MODULE_LIST, buildFaq } from '../../utils/moduleCatalog';
-import { getModuleMoreAbout, getModuleDisplayName } from '../../utils/moduleMoreAbout';
+import { getModuleMoreAbout, getModuleDisplayName, getModuleStackOverflowQuestions, getModuleYouTubeVideos } from '../../utils/moduleMoreAbout';
+
 const { module } = Astro.params;
+const { origin } = Astro.url;
 const moduleKey = typeof module === 'string' ? module : '';
 const isKnownModule = MODULE_LIST.includes(moduleKey);
 const guide = isKnownModule ? MODULE_GUIDES[moduleKey] : undefined;
 const meta = isKnownModule && headline[moduleKey] ? headline[moduleKey] : undefined;
 const title = meta?.title ?? 'Fakeact';
 const description = meta?.desc ?? 'Fakeact module';
+const keywords = meta?.keywords ?? '';
+const shortName = meta?.shortName ?? moduleKey;
+const category = meta?.category ?? 'Developer Tools';
 const commandExamples = isKnownModule ? [
     `fakeact -m ${moduleKey}`,
     `fakeact -m ${moduleKey} -s 1.5 -t 1`,
@@ -21,14 +26,149 @@ const relatedModules = MODULE_LIST.filter((name) => name !== moduleKey);
 const faqItems = isKnownModule ? buildFaq(moduleKey) : [];
 const moreAbout = isKnownModule ? getModuleMoreAbout(moduleKey) : undefined;
 const moduleDisplayName = getModuleDisplayName(moduleKey);
+const stackOverflowQuestions = isKnownModule ? getModuleStackOverflowQuestions(moduleKey) : [];
+const youtubeVideos = isKnownModule ? getModuleYouTubeVideos(moduleKey) : [];
 const introParagraphs = guide ? [
     `This module simulates ${guide.tags[0]}, ${guide.tags[1]}, and ${guide.tags[2]} log events with realistic pacing.`,
     'It is designed for demos, log pipeline testing, and documentation where the real stack is unavailable.',
     'All output is generated locally in the browser and is safe to run.',
 ] : [];
+
+// JSON-LD Structured Data
+const pageUrl = `${origin}/module/${moduleKey}`;
+const jsonLd = isKnownModule ? {
+    '@context': 'https://schema.org',
+    '@graph': [
+        // WebApplication Schema
+        {
+            '@type': 'WebApplication',
+            '@id': `${pageUrl}#webapp`,
+            'name': shortName,
+            'description': description,
+            'url': pageUrl,
+            'applicationCategory': category,
+            'operatingSystem': 'Any',
+            'browserRequirements': 'Requires JavaScript',
+            'offers': {
+                '@type': 'Offer',
+                'price': '0',
+                'priceCurrency': 'USD',
+            },
+            'creator': {
+                '@type': 'Organization',
+                'name': 'Fakeact',
+                'url': origin,
+            },
+            'featureList': guide?.highlights ?? [],
+            'keywords': keywords,
+        },
+        // FAQPage Schema
+        {
+            '@type': 'FAQPage',
+            '@id': `${pageUrl}#faq`,
+            'mainEntity': [
+                ...faqItems.map(item => ({
+                    '@type': 'Question',
+                    'name': item.question,
+                    'acceptedAnswer': {
+                        '@type': 'Answer',
+                        'text': item.answer,
+                    },
+                })),
+                ...stackOverflowQuestions.slice(0, 5).map(item => ({
+                    '@type': 'Question',
+                    'name': item.question,
+                    'acceptedAnswer': {
+                        '@type': 'Answer',
+                        'text': item.answer,
+                    },
+                })),
+            ],
+        },
+        // HowTo Schema for using the tool
+        {
+            '@type': 'HowTo',
+            '@id': `${pageUrl}#howto`,
+            'name': `How to use ${shortName}`,
+            'description': `Generate realistic ${moduleDisplayName} logs with Fakeact`,
+            'step': [
+                {
+                    '@type': 'HowToStep',
+                    'position': 1,
+                    'name': 'Open the simulator',
+                    'text': `Navigate to the ${shortName} page on Fakeact`,
+                },
+                {
+                    '@type': 'HowToStep',
+                    'position': 2,
+                    'name': 'View the terminal',
+                    'text': 'The simulated log output will start automatically in the terminal preview',
+                },
+                {
+                    '@type': 'HowToStep',
+                    'position': 3,
+                    'name': 'Use CLI for advanced options',
+                    'text': `Run "fakeact -m ${moduleKey}" for command-line usage with speed and repeat options`,
+                },
+            ],
+            'tool': {
+                '@type': 'HowToTool',
+                'name': 'Web Browser or Terminal',
+            },
+        },
+        // BreadcrumbList Schema
+        {
+            '@type': 'BreadcrumbList',
+            '@id': `${pageUrl}#breadcrumb`,
+            'itemListElement': [
+                {
+                    '@type': 'ListItem',
+                    'position': 1,
+                    'name': 'Home',
+                    'item': origin,
+                },
+                {
+                    '@type': 'ListItem',
+                    'position': 2,
+                    'name': shortName,
+                    'item': pageUrl,
+                },
+            ],
+        },
+        // SoftwareSourceCode for CLI examples
+        {
+            '@type': 'SoftwareSourceCode',
+            '@id': `${pageUrl}#code`,
+            'name': `${shortName} CLI Commands`,
+            'programmingLanguage': 'Bash',
+            'codeRepository': 'https://github.com/nicehash/fakeact',
+            'codeSampleType': 'full',
+            'text': commandExamples.join('\n'),
+        },
+        // VideoObject Schema for YouTube tutorials
+        ...youtubeVideos.map((video, index) => ({
+            '@type': 'VideoObject',
+            '@id': `${pageUrl}#video${index + 1}`,
+            'name': video.title,
+            'description': video.description,
+            'thumbnailUrl': `https://img.youtube.com/vi/${video.videoId}/maxresdefault.jpg`,
+            'uploadDate': '2024-01-01',
+            'contentUrl': `https://www.youtube.com/watch?v=${video.videoId}`,
+            'embedUrl': `https://www.youtube.com/embed/${video.videoId}`,
+            'publisher': {
+                '@type': 'Organization',
+                'name': video.channel,
+                'logo': {
+                    '@type': 'ImageObject',
+                    'url': 'https://www.youtube.com/favicon.ico',
+                },
+            },
+        })),
+    ],
+} : undefined;
 ---
 
-<Layout title={title} description={description}>
+<Layout title={title} description={description} keywords={keywords} jsonLd={jsonLd}>
     <div class="bg-black text-white">
         <div class="container mx-auto max-w-6xl px-4 py-8">
             <div class="flex items-center justify-between text-xs text-gray-500">
@@ -172,6 +312,105 @@ const introParagraphs = guide ? [
                             </p>
                         )}
                     </section>
+
+                    {stackOverflowQuestions.length > 0 && (
+                        <section class="mt-10" aria-labelledby="stackoverflow-heading">
+                            <h2 id="stackoverflow-heading" class="text-lg font-semibold text-gray-200">
+                                Stack Overflow Questions
+                            </h2>
+                            <p class="mt-2 text-sm text-gray-400">
+                                Popular questions and answers from Stack Overflow related to {moduleDisplayName}.
+                            </p>
+                            <div class="mt-4 space-y-4">
+                                {stackOverflowQuestions.map((item) => (
+                                    <div class="rounded-md border border-gray-800 bg-black/50 p-4">
+                                        <div class="flex items-start gap-3">
+                                            <svg class="mt-0.5 h-5 w-5 flex-shrink-0 text-orange-500" viewBox="0 0 24 24" fill="currentColor">
+                                                <path d="M18.986 21.865v-6.404h2.134V24H1.844v-8.539h2.13v6.404h15.012zM6.111 19.731H16.85v-2.137H6.111v2.137zm.259-4.852l10.48 2.189.451-2.07-10.478-2.187-.453 2.068zm1.359-5.056l9.705 4.53.903-1.95-9.706-4.53-.902 1.95zm2.715-4.785l8.217 6.855 1.359-1.62-8.216-6.853-1.36 1.618zM15.751 0l-1.746 1.294 6.405 8.604 1.746-1.294L15.749 0z"/>
+                                            </svg>
+                                            <div class="flex-1 min-w-0">
+                                                <a
+                                                    href={item.questionUrl}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    class="text-sm font-semibold text-gray-200 hover:text-orange-400 hover:underline"
+                                                >
+                                                    {item.question}
+                                                </a>
+                                                <div class="mt-2 rounded bg-gray-900/50 p-3">
+                                                    <div class="flex items-center gap-2 text-xs text-green-500 mb-2">
+                                                        <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                                        </svg>
+                                                        <span class="font-medium">Accepted Answer</span>
+                                                    </div>
+                                                    <p class="text-sm text-gray-300 whitespace-pre-line">{item.answer}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    )}
+
+                    {youtubeVideos.length > 0 && (
+                        <section class="mt-10" aria-labelledby="youtube-heading">
+                            <h2 id="youtube-heading" class="text-lg font-semibold text-gray-200 flex items-center gap-2">
+                                <svg class="h-6 w-6 text-red-500" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                                </svg>
+                                YouTube Tutorials
+                            </h2>
+                            <p class="mt-2 text-sm text-gray-400">
+                                Popular video tutorials to learn more about {moduleDisplayName}.
+                            </p>
+                            <div class="mt-4 grid gap-6 lg:grid-cols-2">
+                                {youtubeVideos.map((video) => (
+                                    <div class="rounded-lg border border-gray-800 bg-black/50 overflow-hidden">
+                                        <div class="relative aspect-video bg-gray-900">
+                                            <iframe
+                                                class="absolute inset-0 w-full h-full"
+                                                src={`https://www.youtube.com/embed/${video.videoId}`}
+                                                title={video.title}
+                                                frameborder="0"
+                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                allowfullscreen
+                                                loading="lazy"
+                                            ></iframe>
+                                        </div>
+                                        <div class="p-4">
+                                            <a
+                                                href={`https://www.youtube.com/watch?v=${video.videoId}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                class="text-sm font-semibold text-gray-200 hover:text-red-400 hover:underline line-clamp-2"
+                                            >
+                                                {video.title}
+                                            </a>
+                                            <p class="mt-1 text-xs text-gray-500">
+                                                {video.channel}
+                                            </p>
+                                            <p class="mt-2 text-sm text-gray-400 line-clamp-2">
+                                                {video.description}
+                                            </p>
+                                            <a
+                                                href={`https://www.youtube.com/watch?v=${video.videoId}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                class="mt-3 inline-flex items-center gap-1 text-xs text-red-400 hover:text-red-300"
+                                            >
+                                                <span>Watch on YouTube</span>
+                                                <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    )}
 
                     <section class="mt-10">
                         <h2 class="text-lg font-semibold text-gray-200">Related modules</h2>
