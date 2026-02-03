@@ -65,10 +65,10 @@ export const MODULE_YOUTUBE_VIDEOS: Record<string, YouTubeVideo[]> = {
     ],
     botnet: [
         {
-            videoId: 'SDhYPl3detected',
-            title: 'How Botnets Work - Cybersecurity Explained',
-            description: 'Educational overview of botnet architecture, C2 communication, and how security professionals detect and analyze malicious networks.',
-            channel: 'NetworkChuck',
+            videoId: '3BbxUCOFX8g',
+            title: 'What is a Botnet?',
+            description: 'A botnet is a network of infected computers, used for criminal purposes. Visit Kaspersky Lab at https://goo.gl/mwf8eR to learn how our products can help you stay protected.Your computer could be part of a botnet, without you even knowing! Malware can turn your computer into a ‘bot’ to be used for launching DDoS attacks, phishing and spam campaigns, and online fraud campaigns. ',
+            channel: 'Kaspersky',
         },
         {
             videoId: 'WnN6dbos5u8',
@@ -177,10 +177,10 @@ export const MODULE_YOUTUBE_VIDEOS: Record<string, YouTubeVideo[]> = {
     ],
     geminiCli: [
         {
-            videoId: 'hOCHfPofc9g',
-            title: 'Gemini API Tutorial - Getting Started',
-            description: 'Introduction to Google\'s Gemini AI API. Learn authentication, basic prompts, code generation, and building AI-powered applications.',
-            channel: 'Google Developers',
+            videoId: '1AF5pFGwRTM',
+            title: 'Gemini CLI Tutorial #1 - Introduction & Setup',
+            description: 'In this Gemini CLI Crash Course series, I\'ll show you how to get up an running wth the CLI in a project, use extensions & MCP servers, add an API key to access Gemini 3 models and more.',
+            channel: 'The Net Ninja',
         },
         {
             videoId: 'UIZAiXYceBI',
@@ -261,15 +261,15 @@ export const MODULE_YOUTUBE_VIDEOS: Record<string, YouTubeVideo[]> = {
     ],
     rkhunter: [
         {
-            videoId: 'fVgj9tXYEPg',
-            title: 'Linux Security Tools - rkhunter & chkrootkit',
-            description: 'Learn to use rkhunter and chkrootkit for Linux security scanning. Covers installation, configuration, and interpreting scan results.',
-            channel: 'HackerSploit',
+            videoId: '2W3KeqCzejY',
+            title: '10 Ways to Secure Your Linux Server',
+            description: 'Learn Linux server security including updates, firewall, SSH hardening, and security tools. Essential for understanding rootkit detection context.',
+            channel: 'Learn Linux TV',
         },
         {
-            videoId: 'kV3oCTfrVlY',
-            title: 'Server Security Hardening Guide',
-            description: 'Comprehensive server security including rootkit detection, intrusion detection systems, and security best practices.',
+            videoId: 'dGCSMxJcKig',
+            title: 'Linux Security - Protect Your Server',
+            description: 'Comprehensive guide to securing Linux servers including intrusion detection, monitoring, and security best practices.',
             channel: 'NetworkChuck',
         },
     ],
