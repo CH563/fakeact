@@ -2,6 +2,7 @@
 import CommandLine from '../../components/CommandLine.astro';
 import Layout from '../../layouts/Layout.astro';
 import headline from '../../utils/headline';
+import Footer from '../../components/footer.astro';
 import { MODULE_GUIDES, MODULE_LIST, buildFaq } from '../../utils/moduleCatalog';
 const { module } = Astro.params;
 const moduleKey = typeof module === 'string' ? module : '';
@@ -162,6 +163,7 @@ const introParagraphs = guide ? [
             )}
         </div>
     </div>
+    <Footer />
 </Layout>
 
 <script is:inline>
