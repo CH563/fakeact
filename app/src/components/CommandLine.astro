@@ -5,17 +5,17 @@ export interface Props {
 const { module } = Astro.props;
 ---
 
-<div class="bg-black w-full h-full" id="container" data-module={module}></div>
+<div class="command-line-terminal bg-black w-full h-full" id="container" data-module={module}></div>
 
 <script>
     import '/node_modules/@xterm/xterm/css/xterm.css';
-    import chalk from 'chalk';
     import logoStr from '../utils/logo';
     import { moduleMap } from '../utils/moduleMap';
     import { Terminal } from '@xterm/xterm';
     import { FitAddon } from '@xterm/addon-fit';
     import { WebLinksAddon } from '@xterm/addon-web-links';
 
+    const bold = (s) => `\x1b[1m${s}\x1b[0m`;
     const container = document.getElementById('container');
     if (container) {
         const module = container?.getAttribute('data-module') || 'ansible';
@@ -31,7 +31,7 @@ const { module } = Astro.props;
         window.addEventListener('resize', () => fitAddon.fit());
         terminal.onKey((e) => {
             if (e.domEvent.key === 'c' && e.domEvent.ctrlKey) {
-                terminal.writeln(chalk.bold('Exiting...'));
+                terminal.writeln(bold('Exiting...'));
                 setTimeout(() => {
                     terminal.dispose();
                     window.location.href = '/';
@@ -40,7 +40,7 @@ const { module } = Astro.props;
         });
         (async() => {
             logoStr.split('\n').forEach((line) => terminal.writeln(line));
-            terminal.writeln(chalk.bold(' Press Ctrl + C to exit...'));
+            terminal.writeln(bold(' Press Ctrl + C to exit...'));
             terminal.writeln('');
             while(true) {
                 const runModule = moduleMap[module];
@@ -51,3 +51,10 @@ const { module } = Astro.props;
         })()
     }
 </script>
+
+<style is:global>
+    .command-line-terminal .xterm .xterm-viewport {
+        overflow: hidden !important;
+        background-color: transparent !important;
+    }
+</style>

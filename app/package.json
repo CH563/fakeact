@@ -2,6 +2,14 @@
   "name": "app",
   "type": "module",
   "version": "0.0.1",
+  "overrides": {
+    "esbuild": "0.24.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "esbuild": "0.24.0"
+    }
+  },
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",

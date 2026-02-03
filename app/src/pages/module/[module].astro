@@ -38,8 +38,24 @@ const introParagraphs = guide ? [
                 <>
                     <div class="mt-8 grid gap-6 lg:grid-cols-3">
                         <div class="lg:col-span-2">
-                            <div class="rounded-md border border-gray-800 bg-black/60 p-2">
-                                <div class="h-[60vh] min-h-[420px]">
+                            <div id="command-shell-wrapper" class="command-shell-wrapper rounded-md border border-gray-800 bg-black/60">
+                                <div class="command-shell-top-zone" data-commandline-top-zone aria-hidden="true"></div>
+                                <div class="command-shell-toolbar flex items-center justify-between gap-3 border-b border-gray-800/70 px-3 py-2 text-xs uppercase tracking-wide text-gray-400">
+                                    <span>Terminal preview</span>
+                                    <button
+                                        type="button"
+                                        class="flex items-center gap-2 rounded border border-gray-700/60 px-3 py-1.5 text-[11px] font-semibold text-gray-200 transition hover:border-gray-500 hover:text-white"
+                                        data-commandline-fullscreen
+                                        aria-pressed="false"
+                                        aria-controls="command-shell-wrapper"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3.5 w-3.5">
+                                            <path d="M4.5 3A1.5 1.5 0 0 0 3 4.5V7a1 1 0 0 0 2 0V5h2a1 1 0 1 0 0-2zm9 0a1 1 0 1 0 0 2h2v2a1 1 0 1 0 2 0V4.5A1.5 1.5 0 0 0 16.5 3zm-9 14a1 1 0 1 0 0-2H4v-2a1 1 0 1 0-2 0v2.5A1.5 1.5 0 0 0 3.5 17zm9 0H15v-2a1 1 0 1 0 2 0v2.5a1.5 1.5 0 0 1-1.5 1.5H13a1 1 0 1 1 0-2" />
+                                        </svg>
+                                        <span data-commandline-fullscreen-label>全屏模式</span>
+                                    </button>
+                                </div>
+                                <div class="command-shell-terminal h-[60vh] min-h-[420px] p-2">
                                     <CommandLine module={moduleKey} />
                                 </div>
                             </div>
@@ -147,3 +163,170 @@ const introParagraphs = guide ? [
         </div>
     </div>
 </Layout>
+
+<script is:inline>
+    const initCommandLineFullscreen = () => {
+        const wrapper = document.getElementById('command-shell-wrapper');
+        const toggleButton = document.querySelector('[data-commandline-fullscreen]');
+        const toolbar = wrapper?.querySelector('.command-shell-toolbar');
+        const topZone = wrapper?.querySelector('[data-commandline-top-zone]');
+        if (!wrapper || !toggleButton || !toolbar) {
+            return;
+        }
+
+        const onPointerReveal = () => {
+            if (!isFullscreen) return;
+            revealToolbar();
+        };
+
+        const label = toggleButton.querySelector('[data-commandline-fullscreen-label]');
+        const html = document.documentElement;
+        const body = document.body;
+        let isFullscreen = false;
+        let hideTimer = -1;
+
+        const setToolbarHidden = (hidden) => {
+            toolbar.classList.toggle('is-hidden', hidden);
+        };
+
+        const clearHideTimer = () => {
+            if (hideTimer !== -1) {
+                window.clearTimeout(hideTimer);
+                hideTimer = -1;
+            }
+        };
+
+        const scheduleToolbarHide = () => {
+            clearHideTimer();
+            if (!isFullscreen) {
+                return;
+            }
+            hideTimer = window.setTimeout(() => {
+                setToolbarHidden(true);
+            }, 2000);
+        };
+
+        const revealToolbar = () => {
+            setToolbarHidden(false);
+            scheduleToolbarHide();
+        };
+
+        const applyState = () => {
+            wrapper.classList.toggle('is-fullscreen', isFullscreen);
+            html.classList.toggle('command-fullscreen-open', isFullscreen);
+            body.classList.toggle('command-fullscreen-open', isFullscreen);
+            toggleButton.setAttribute('aria-pressed', String(isFullscreen));
+            if (label) {
+                label.textContent = isFullscreen ? '退出全屏' : '全屏模式';
+            }
+            if (isFullscreen) {
+                revealToolbar();
+            } else {
+                clearHideTimer();
+                setToolbarHidden(false);
+            }
+            window.dispatchEvent(new Event('resize'));
+        };
+
+        const toggleFullscreen = () => {
+            isFullscreen = !isFullscreen;
+            applyState();
+        };
+
+        toggleButton.addEventListener('click', toggleFullscreen);
+        toggleButton.addEventListener('focus', onPointerReveal);
+        wrapper.addEventListener('pointermove', onPointerReveal);
+        if (topZone) {
+            topZone.addEventListener('pointerenter', onPointerReveal);
+            topZone.addEventListener('pointermove', onPointerReveal);
+        }
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && isFullscreen) {
+                isFullscreen = false;
+                applyState();
+            }
+        });
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCommandLineFullscreen, { once: true });
+    } else {
+        initCommandLineFullscreen();
+    }
+</script>
+
+<style is:global>
+    .command-shell-wrapper {
+        position: relative;
+    }
+
+    .command-shell-toolbar {
+        transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .command-shell-toolbar.is-hidden {
+        opacity: 0;
+        transform: translateY(-100%);
+        pointer-events: none;
+    }
+
+    .command-shell-top-zone {
+        display: none;
+    }
+
+    .command-shell-wrapper.is-fullscreen .command-shell-top-zone {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 72px;
+        z-index: 10;
+        cursor: default;
+    }
+
+    .command-shell-wrapper.is-fullscreen {
+        position: fixed;
+        inset: 0;
+        z-index: 40;
+        max-width: none;
+        width: 100%;
+        height: 100vh;
+        border-radius: 0;
+        border: none;
+        padding: 1rem;
+        background-color: #050505;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        overflow: visible;
+    }
+
+    .command-shell-wrapper.is-fullscreen .command-shell-toolbar {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        right: 1rem;
+        z-index: 11;
+        background: rgba(12, 12, 12, 0.85);
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        border-radius: 0.5rem;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(8px);
+    }
+
+    .command-shell-wrapper.is-fullscreen .command-shell-terminal {
+        flex: 1;
+        height: auto;
+        min-height: 0;
+    }
+
+    .command-shell-terminal {
+        transition: height 0.2s ease;
+    }
+
+    html.command-fullscreen-open,
+    body.command-fullscreen-open {
+        overflow: hidden;
+    }
+</style>
