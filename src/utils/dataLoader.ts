@@ -35,6 +35,10 @@ export const DATA_FILES: { [key: string]: string[] | null } = {
     terraform_azure_resources: null,
     terraform_gcp_resources: null,
     terraform_ids: null,
+    claude_code_onboarding: null,
+    claude_code_prs: null,
+    claude_code_edits: null,
+    gemini_cli: null,
 };
 
 export const DATA_CSV: { [key: string]: CSVFILE[] | null } = {

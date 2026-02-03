@@ -8,6 +8,7 @@ import botnet from './botnet.js';
 import bruteforce from './bruteforce.js';
 import cargo from './cargo.js';
 import cc from './cc.js';
+import claudeCode from './claudeCode.js';
 import cryptomining from './cryptomining.js';
 import weblog from './weblog.js';
 import terraform from './terraform.js';
@@ -20,6 +21,7 @@ import rkhunter from './rkhunter.js';
 import simcity from './simcity.js';
 import nextBuild from './nextBuild.js';
 import ganache from './ganache.js';
+import geminiCli from './geminiCli.js';
 import pip from './pip.js';
 
 export default {
@@ -33,6 +35,7 @@ export default {
     bruteforce,
     cargo,
     cc,
+    claudeCode,
     cryptomining,
     weblog,
     terraform,
@@ -45,5 +48,6 @@ export default {
     simcity,
     nextBuild,
     ganache,
+    geminiCli,
     pip
 };
