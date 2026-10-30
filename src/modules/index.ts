@@ -21,6 +21,8 @@ import simcity from './simcity.js';
 import nextBuild from './nextBuild.js';
 import ganache from './ganache.js';
 import pip from './pip.js';
+import claudeCode from './claudeCode.js';
+import geminiCli from './geminiCli.js';
 
 export default {
     download,
@@ -45,5 +47,7 @@ export default {
     simcity,
     nextBuild,
     ganache,
-    pip
+    pip,
+    claudeCode,
+    geminiCli
 };

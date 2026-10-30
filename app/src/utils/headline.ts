@@ -23,6 +23,10 @@ export default {
         title: 'C/C++ Compilation Log Generator | Build Process Simulator',
         desc: 'Simulate complete C/C++ compilation logs including preprocessing, compilation, and linking stages. Generate realistic compiler outputs for testing and debugging.',
     },
+    claudeCode: {
+        title: 'Claude Code CLI Simulator | AI Coding Assistant Log Generator',
+        desc: 'Simulate Claude Code AI assistant logs including tool calls, file edits, and terminal commands. Perfect for AI coding workflow demos and integration testing.',
+    },
     composer: {
         title: 'PHP Composer Log Generator | Package Installation Simulator',
         desc: 'Generate realistic PHP Composer installation and update logs. Simulate dependency resolution, package downloads, and autoloader configuration processes.',
@@ -86,6 +90,10 @@ export default {
     ganache: {
         title: 'Ganache Blockchain Log Generator | Ethereum Development',
         desc: 'Create realistic Ganache blockchain logs with account creation, transaction processing, and block generation details. Perfect for smart contract testing.',
+    },
+    geminiCli: {
+        title: 'Gemini CLI Log Simulator | Google AI Coding Assistant Demo',
+        desc: 'Simulate Gemini CLI terminal logs with read_file, run_shell_command, and Gemini API responses. Perfect for Google AI coding tool demos and integration testing.',
     },
     pip: {
         title: 'Pip Installation Log Generator | Python Package Tool',

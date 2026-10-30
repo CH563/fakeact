@@ -3,8 +3,16 @@ import CommandLine from '../../components/CommandLine.astro';
 import Layout from '../../layouts/Layout.astro';
 import headline from '../../utils/headline';
 import { MODULE_GUIDES, MODULE_LIST, buildFaq } from '../../utils/moduleCatalog';
+export const prerender = true;
+
+export function getStaticPaths() {
+    return MODULE_LIST.map((module) => ({ params: { module } }));
+}
+
 const { module } = Astro.params;
 const moduleKey = typeof module === 'string' ? module : '';
+const requestedSpeed = Number(Astro.url.searchParams.get('speed'));
+const initialSpeed = [0.5, 1, 2, 4].includes(requestedSpeed) ? requestedSpeed : 1;
 const isKnownModule = MODULE_LIST.includes(moduleKey);
 const guide = isKnownModule ? MODULE_GUIDES[moduleKey] : undefined;
 const meta = isKnownModule && headline[moduleKey] ? headline[moduleKey] : undefined;
@@ -40,11 +48,12 @@ const introParagraphs = guide ? [
                         <div class="lg:col-span-2">
                             <div class="rounded-md border border-gray-800 bg-black/60 p-2">
                                 <div class="h-[60vh] min-h-[420px]">
-                                    <CommandLine module={moduleKey} />
+                                    <CommandLine module={moduleKey} initialSpeed={initialSpeed} />
                                 </div>
                             </div>
                             <p class="mt-2 text-xs text-gray-500">
-                                Press Ctrl + C to exit. Output is simulated for demo purposes only.
+                                Use the controls above to pause, restart, change speed, go fullscreen, or copy a share link.
+                                Press Ctrl + C to stop playback. Output is simulated for demo purposes only.
                             </p>
                         </div>
                         <aside class="space-y-6">
@@ -102,7 +111,7 @@ const introParagraphs = guide ? [
                             <h3 class="mt-6 text-sm font-semibold text-gray-300">Notes</h3>
                             <ul class="mt-2 list-disc list-inside text-sm text-gray-400 space-y-1">
                                 <li>All output is simulated text; no system changes are made.</li>
-                                <li>Refresh the page to restart the log stream.</li>
+                                <li>Use the player controls to pause, change speed, or restart the log stream.</li>
                                 <li>Use the CLI for longer sessions or offline demos.</li>
                             </ul>
                         </div>
