@@ -48,8 +48,8 @@ class BrowserOra {
     }
     start() {}
     stop() {}
-    succeed() {}
-    fail() {}
+    succeed(text?: string) { if (text) writeLine(text); }
+    fail(text?: string) { if (text) writeLine(text); }
     warn() {}
     info() {}
     stopAndPersist() {}

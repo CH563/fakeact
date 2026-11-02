@@ -120,6 +120,8 @@ const speeds = [0.5, 1, 2, 4];
         claudeCode: () => import('../../../src/modules/claudeCode'),
         composer: () => import('../../../src/modules/composer'),
         cryptomining: () => import('../../../src/modules/cryptomining'),
+        dockerImageRm: () => import('../../../src/modules/dockerImageRm'),
+        download: () => import('../../../src/modules/download'),
         ganache: () => import('../../../src/modules/ganache'),
         geminiCli: () => import('../../../src/modules/geminiCli'),
         kernelCompile: () => import('../../../src/modules/kernelCompile'),
@@ -127,9 +129,11 @@ const speeds = [0.5, 1, 2, 4];
         mkinitcpio: () => import('../../../src/modules/mkinitcpio'),
         pip: () => import('../../../src/modules/pip'),
         nextBuild: () => import('../../../src/modules/nextBuild'),
+        npm: () => import('../../../src/modules/npm'),
         rkhunter: () => import('../../../src/modules/rkhunter'),
         simcity: () => import('../../../src/modules/simcity'),
         terraform: () => import('../../../src/modules/terraform'),
+        weblog: () => import('../../../src/modules/weblog'),
     };
 
     const player = document.querySelector('.fakeact-player') as HTMLElement | null;

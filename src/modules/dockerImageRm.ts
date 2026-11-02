@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import { sleep, getRandomInt, getRandomItem, generateHexString, getRandomUniqueItems } from '../utils/helpers.js';
 import { loadData } from '../utils/dataLoader.js';
+import { writeLine } from '../utils/environment.js';
 
 interface AppConfig {
     shouldExit: () => boolean;
@@ -35,14 +36,14 @@ async function dockerImageRm(options: DockerImageRmOptions = { speedFactor: 1 })
         const hash = generateHexString(64);
         
         // Print untagged messages
-        console.log(chalk.dim(`Untagged: ${packageName}:${packageTag}`));
-        console.log(chalk.dim(`Untagged: ${packageName}:${packageTag}@sha256:${hash}`));
+        writeLine(chalk.dim(`Untagged: ${packageName}:${packageTag}`));
+        writeLine(chalk.dim(`Untagged: ${packageName}:${packageTag}@sha256:${hash}`));
         
         // Generate and print random number of deleted hash messages
         const numHashes = getRandomInt(10, 30);
         for (let i = 0; i < numHashes; i++) {
             const deleteHash = generateHexString(64);
-            console.log(chalk.dim(`Deleted: sha256:${deleteHash}`));
+            writeLine(chalk.dim(`Deleted: sha256:${deleteHash}`));
         }
         
         // Sleep for random duration

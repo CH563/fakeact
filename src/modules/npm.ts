@@ -1,6 +1,6 @@
-import ora from 'ora';
 import chalk from 'chalk';
 import { sleep, getRandomInt } from '../utils/helpers.js';
+import { oraFun, writeLine, write } from '../utils/environment.js';
 import { COMMON_PACKAGES, Package } from '../utils/packageLists.js'
 
 
@@ -56,7 +56,9 @@ function generateProgressBar(progress: number): string {
 }
 
 async function npm(speedFactor: number = 1, config: AppConfig = {}) {
-    const spinner = ora('Resolving dependencies...').start();
+    const spinner = await oraFun();
+    spinner.text = 'Resolving dependencies...';
+    spinner.start();
     const packages = [...COMMON_PACKAGES];
     const totalPackages = getRandomInt(20, 40);
     
@@ -74,7 +76,7 @@ async function npm(speedFactor: number = 1, config: AppConfig = {}) {
     spinner.succeed('Dependencies resolved');
 
     // 显示包的依赖树
-    console.log(chalk.gray('\nDependencies:'));
+    writeLine(chalk.gray('\nDependencies:'));
     const devDeps = packages.filter(p => p.isDevDependency);
     const regularDeps = packages.filter(p => !p.isDevDependency);
 
@@ -82,38 +84,38 @@ async function npm(speedFactor: number = 1, config: AppConfig = {}) {
         deps.slice(0, 6).forEach((pkg, index, arr) => {
             const isLast = index === arr.length - 1;
             const line = isLast ? '└── ' : '├── ';
-            console.log(chalk.gray(`${prefix}${line}${pkg.name}@${pkg.version}`));
+            writeLine(chalk.gray(`${prefix}${line}${pkg.name}@${pkg.version}`));
             
             if (pkg.dependencies) {
                 const newPrefix = prefix + (isLast ? '    ' : '│   ');
                 Object.entries(pkg.dependencies).slice(0, 3).forEach(([depName, depVersion], depIndex, depArr) => {
                     const depIsLast = depIndex === depArr.length - 1;
                     const depLine = depIsLast ? '└── ' : '├── ';
-                    console.log(chalk.gray(`${newPrefix}${depLine}${depName}@${depVersion}`));
+                    writeLine(chalk.gray(`${newPrefix}${depLine}${depName}@${depVersion}`));
                 });
                 if (Object.keys(pkg.dependencies).length > 3) {
-                    console.log(chalk.gray(`${newPrefix}└── ...`));
+                    writeLine(chalk.gray(`${newPrefix}└── ...`));
                 }
             }
         });
     }
 
-    console.log(chalk.gray('Regular dependencies:'));
+    writeLine(chalk.gray('Regular dependencies:'));
     printDeps(regularDeps);
     if (regularDeps.length > 6) {
-        console.log(chalk.gray(`└── ... and ${regularDeps.length - 6} more`));
+        writeLine(chalk.gray(`└── ... and ${regularDeps.length - 6} more`));
     }
 
     if (devDeps.length > 0) {
-        console.log(chalk.gray('\nDev dependencies:'));
+        writeLine(chalk.gray('\nDev dependencies:'));
         printDeps(devDeps);
         if (devDeps.length > 6) {
-            console.log(chalk.gray(`└── ... and ${devDeps.length - 6} more`));
+            writeLine(chalk.gray(`└── ... and ${devDeps.length - 6} more`));
         }
     }
     
     await sleep(500 * speedFactor);
-    console.log('\nPackages ('+packages.length+'):');
+    writeLine('\nPackages ('+packages.length+'):');
     
     // 安装进度
     const statusMessages = [
@@ -133,7 +135,7 @@ async function npm(speedFactor: number = 1, config: AppConfig = {}) {
 
     for (let i = 0; i < packages.length; i++) {
         if (config.shouldExit) {
-            console.log(chalk.red('\nInstallation interrupted'));
+            writeLine(chalk.red('\nInstallation interrupted'));
             return;
         }
 
@@ -142,11 +144,11 @@ async function npm(speedFactor: number = 1, config: AppConfig = {}) {
         const progressBar = generateProgressBar(progress);
         
         // 清除上一行
-        if (i > 0) process.stdout.write('\x1B[1A\x1B[2K');
+        if (i > 0) write('\x1B[1A\x1B[2K');
         
         // 显示当前安装的包
         const pkgType = pkg.isDevDependency ? chalk.gray(' (dev)') : '';
-        console.log(
+        writeLine(
             `${progressBar} ${(progress * 100).toFixed(1)}% ` +
             chalk.green(`added ${pkg.name}@${pkg.version}`) +
             pkgType +
@@ -155,7 +157,7 @@ async function npm(speedFactor: number = 1, config: AppConfig = {}) {
         
         // 增加状态消息的显示频率
         if (Math.random() > 0.7) {
-            console.log(chalk.gray(statusMessages[Math.floor(Math.random() * statusMessages.length)]));
+            writeLine(chalk.gray(statusMessages[Math.floor(Math.random() * statusMessages.length)]));
         }
 
         await sleep(getRandomInt(100, 300) * speedFactor);
@@ -165,9 +167,9 @@ async function npm(speedFactor: number = 1, config: AppConfig = {}) {
     const totalSize = packages.reduce((acc, pkg) => acc + (pkg.size || 0), 0);
     const installTime = (2 + Math.random() * 2).toFixed(1);
     
-    console.log('\n' + chalk.green('✓') + ' Installation completed successfully');
-    console.log(chalk.gray(`Added ${packages.length} packages (${packages.filter(p => p.isDevDependency).length} dev) in ${installTime}s`));
-    console.log(chalk.gray(`Total size: ${formatSize(totalSize)}`));
+    writeLine('\n' + chalk.green('✓') + ' Installation completed successfully');
+    writeLine(chalk.gray(`Added ${packages.length} packages (${packages.filter(p => p.isDevDependency).length} dev) in ${installTime}s`));
+    writeLine(chalk.gray(`Total size: ${formatSize(totalSize)}`));
     
     // 增加更多类型的警告和提示
     const warnings = [];
@@ -218,15 +220,15 @@ async function npm(speedFactor: number = 1, config: AppConfig = {}) {
     if (Math.random() > 0.9) {
         warnings.push({
             type: 'engine',
-            message: `Package requires Node.js version >=16.0.0\n  Current version: ${process.version}`
+            message: `Package requires Node.js version >=16.0.0\n  Current version: ${typeof process !== 'undefined' && process.version ? process.version : 'v20.0.0'}`
         });
     }
 
     // 显示所有警告
     if (warnings.length > 0) {
-        console.log(''); // 空行
+        writeLine(''); // 空行
         warnings.forEach(warning => {
-            console.log(chalk.yellow('\n' + warning.message));
+            writeLine(chalk.yellow('\n' + warning.message));
         });
     }
 }

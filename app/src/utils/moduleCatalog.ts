@@ -8,6 +8,8 @@ export const MODULE_LIST = [
     'claudeCode',
     'composer',
     'cryptomining',
+    'dockerImageRm',
+    'download',
     'ganache',
     'geminiCli',
     'kernelCompile',
@@ -15,9 +17,11 @@ export const MODULE_LIST = [
     'mkinitcpio',
     'pip',
     'nextBuild',
+    'npm',
     'rkhunter',
     'simcity',
     'terraform',
+    'weblog',
 ].sort();
 
 export type ModuleGuide = {
@@ -42,6 +46,10 @@ const MODULE_TAGS: Record<string, string[]> = {
     claudeCode: ['tool calls', 'file reads', 'file edits', 'terminal commands'],
     composer: ['package installs', 'dependency resolve', 'lock files', 'autoload build'],
     cryptomining: ['hashrate stats', 'gpu workers', 'stratum jobs', 'share submits'],
+    dockerImageRm: ['image lists', 'untagged images', 'dangling layers', 'prune results'],
+    download: ['file downloads', 'progress bars', 'transfer speeds', 'eta estimates'],
+    npm: ['package installs', 'dependency trees', 'version resolves', 'install summaries'],
+    weblog: ['http requests', 'status codes', 'user agents', 'traffic spikes'],
     ganache: ['local accounts', 'rpc calls', 'transaction flow', 'block mining'],
     geminiCli: ['REPL', 'read_file', 'run_shell_command', 'web_fetch', 'Gemini API', 'AI summaries'],
     kernelCompile: ['arch builds', 'VMLINUX link', 'object steps', 'bzImage output'],
@@ -201,6 +209,28 @@ const MODULE_SAMPLES: Record<string, string[]> = {
         'aws_instance.web: Creation complete after 12s [id=i-0abc1234]',
         'aws_security_group.web: Modifying... [id=sg-1234abcd]',
         'Apply complete! Resources: 3 added, 1 changed, 0 destroyed.',
+    ],
+    dockerImageRm: [
+        'Untagged: nginx:latest',
+        'Untagged: redis:7-alpine@sha256:9f2c4a1b8e6d3f7a0c5e2b491d8f6a3c7e0b5a2d9f4c681e3a7b0d5f2c4e',
+        'Deleted: sha256:3a7f9c2e5b1d8a6f0c4e2b9d7a5f3c1e8b6d4a0f2e9c7b5a3d1f8e6c4b2a',
+        'Total: 12 images removed, 1.84 GB reclaimed',
+    ],
+    download: [
+        'Download files 12',
+        'ubuntu-22.04-desktop-amd64.iso  68%[================>     ] 1.42 GB  8.50 MB/s eta 52s',
+        'Download complete: 12 files, 4.38 GB in 08:24',
+    ],
+    npm: [
+        'npm install express',
+        'added express@4.18.2',
+        'added 142 packages (38 dev) in 12s',
+        'Total size: 48.2 MB',
+    ],
+    weblog: [
+        '203.0.113.42 - - [02/Nov/2026:10:00:00 +0000] "GET /index.html HTTP/1.0" 200 1234 "-" "Mozilla/5.0"',
+        '198.51.100.17 - - [02/Nov/2026:10:00:01 +0000] "POST /api/login HTTP/1.0" 302 0 "-" "curl/8.0"',
+        '192.0.2.88 - - [02/Nov/2026:10:00:02 +0000] "GET /assets/app.js HTTP/1.0" 404 512 "-" "Mozilla/5.0"',
     ],
 };
 

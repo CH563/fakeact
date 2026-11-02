@@ -1,11 +1,12 @@
-import ora from 'ora';
 import chalk from 'chalk';
 import { getRandomInt, getRandomItem, sleep } from '../utils/helpers.js';
+import { EnvDetector, oraFun, writeLine, getTerminalWidth } from '../utils/environment.js';
 import { EXTENSIONS_LIST, loadData } from '../utils/dataLoader.js';
 
 import { formatBytes, formatDuration } from '../utils/format.js';
 
 const clearLastLine = () => {
+    if (!EnvDetector.isNode()) return;
     process.stdout.moveCursor(0, -1) // up one line
     process.stdout.clearLine(1) // from cursor to end
 }
@@ -16,7 +17,7 @@ async function download(speedFactor = 1) {
 
     const numFiles = getRandomInt(20, 60);
 
-    console.log(chalk.bold(`Download files ${numFiles}`));
+    writeLine(chalk.bold(`Download files ${numFiles}`));
     
     for (let fileIndex = 0; fileIndex < numFiles; fileIndex++) {
         // 随机选择一个文件扩展名
@@ -37,14 +38,15 @@ async function download(speedFactor = 1) {
         // 获取终端宽度并计算显示参数
         const statsWidth = 32;
         const restPadding = 16;
-        const terminalWidth = process.stdout.columns;
+        const terminalWidth = EnvDetector.isNode() ? process.stdout.columns : getTerminalWidth();
         const remainingWidth = terminalWidth - statsWidth;
         const fileNameWidth = Math.floor(remainingWidth / 3);
         const progressBarSize = remainingWidth - fileNameWidth - restPadding;
 
         let bytesDownloaded = 0;
 
-        const spinner = ora().start();
+        const spinner = await oraFun();
+        spinner.start();
         while (bytesDownloaded < fileBytes) {
             // 模拟下载速度波动
             const speedOffset = getRandomInt(-5_000_000, 5_000_000);
@@ -72,7 +74,7 @@ async function download(speedFactor = 1) {
 
             // 更新显示
             const text = `${truncatedFileName} ${percent.padStart(3)}%${progressBar} ${formattedBytes.padEnd(10)} ${formattedSpeed.padEnd(12)} eta ${formattedEta.padEnd(10)}`;
-            spinner.suffixText = text;
+            if (EnvDetector.isBrowser()) { spinner.text = text; } else { spinner.suffixText = text; }
             await sleep(sleepMillis / speedFactor);
         }
         spinner.succeed();
