@@ -1,60 +1,368 @@
 ---
 export interface Props {
     module?: string;
+    initialSpeed?: number;
+    showPicker?: boolean;
+    modules?: string[];
 }
-const { module } = Astro.props;
+
+const {
+    module: initialModule = 'cargo',
+    initialSpeed = 1,
+    showPicker = false,
+    modules = [],
+} = Astro.props;
+
+const speeds = [0.5, 1, 2, 4];
 ---
 
-<div class="command-line-terminal bg-black w-full h-full" id="container" data-module={module}></div>
+<div
+    class="fakeact-player rounded-md border border-gray-800 bg-black"
+    data-module={initialModule}
+    data-speed={initialSpeed}
+    data-show-picker={showPicker ? 'true' : 'false'}
+>
+    <div class="flex flex-wrap items-center gap-2 border-b border-gray-800 px-3 py-2 text-xs">
+        <button type="button" data-action="pause" class="rounded border border-gray-700 px-3 py-1.5 font-semibold text-gray-200 hover:bg-gray-800">
+            ⏸ Pause
+        </button>
+        <button type="button" data-action="restart" class="rounded border border-gray-700 px-3 py-1.5 font-semibold text-gray-200 hover:bg-gray-800">
+            ↻ Restart
+        </button>
+        <span class="text-gray-500">Speed:</span>
+        <span class="flex gap-1" data-speed-group>
+            {
+                speeds.map((speed) => (
+                    <button
+                        type="button"
+                        data-speed={speed}
+                        class="rounded border px-2 py-1 font-semibold hover:bg-gray-800"
+                        class:list={[
+                            speed === initialSpeed
+                                ? 'border-green-500 text-green-400'
+                                : 'border-gray-700 text-gray-300',
+                        ]}
+                    >
+                        {speed}×
+                    </button>
+                ))
+            }
+        </span>
+        <button type="button" data-action="fullscreen" class="rounded border border-gray-700 px-3 py-1.5 font-semibold text-gray-200 hover:bg-gray-800">
+            ⛶ Fullscreen
+        </button>
+        <button type="button" data-action="copy" class="rounded border border-gray-700 px-3 py-1.5 font-semibold text-gray-200 hover:bg-gray-800">
+            🔗 Copy link
+        </button>
+        <span class="ml-auto hidden text-gray-500 sm:inline" data-status>Playing</span>
+    </div>
+
+    {
+        showPicker && modules.length > 0 && (
+            <div class="flex flex-wrap gap-1.5 border-b border-gray-800 px-3 py-2" data-picker>
+                {modules.map((name) => (
+                    <button
+                        type="button"
+                        data-pick={name}
+                        class="rounded px-2 py-1 text-xs font-semibold hover:bg-gray-800"
+                        class:list={[
+                            name === initialModule
+                                ? 'bg-green-600 text-white'
+                                : 'bg-gray-900 text-gray-300',
+                        ]}
+                    >
+                        {name}
+                    </button>
+                ))}
+            </div>
+        )
+    }
+
+    <div class="fakeact-terminal-wrap h-full min-h-[320px] bg-black p-2" data-terminal-wrap>
+        <div class="h-full w-full bg-black" data-terminal></div>
+    </div>
+    <p class="border-t border-gray-800 px-3 py-2 text-xs text-gray-500">
+        Simulated output only — nothing is installed or changed. Press Ctrl + C to stop playback.
+    </p>
+</div>
+
+<style>
+    .fakeact-player:fullscreen {
+        background: #000;
+        border: none;
+        border-radius: 0;
+        width: 100%;
+        height: 100%;
+    }
+    .fakeact-player:fullscreen .fakeact-terminal-wrap {
+        height: calc(100vh - 110px);
+        min-height: 0;
+    }
+</style>
 
 <script>
     import '/node_modules/@xterm/xterm/css/xterm.css';
+    import chalk from 'chalk';
     import logoStr from '../utils/logo';
-    import { moduleMap } from '../utils/moduleMap';
     import { Terminal } from '@xterm/xterm';
     import { FitAddon } from '@xterm/addon-fit';
     import { WebLinksAddon } from '@xterm/addon-web-links';
 
-    const bold = (s) => `\x1b[1m${s}\x1b[0m`;
-    const container = document.getElementById('container');
-    if (container) {
-        const module = container?.getAttribute('data-module') || 'ansible';
-        const terminal = new Terminal({
-            scrollback: 0
-        });
-        const fitAddon = new FitAddon();
-        (window as any).terminal = terminal;
-        terminal.loadAddon(fitAddon);
-        terminal.loadAddon(new WebLinksAddon());
-        terminal.open(container);
-        fitAddon.fit();
-        window.addEventListener('resize', () => fitAddon.fit());
-        terminal.onKey((e) => {
-            if (e.domEvent.key === 'c' && e.domEvent.ctrlKey) {
-                terminal.writeln(bold('Exiting...'));
-                setTimeout(() => {
-                    terminal.dispose();
-                    window.location.href = '/';
-                }, 200);
+    // One module per chunk, so the homepage only downloads the module
+    // that is actually playing instead of all of them up front.
+    const loaders: Record<string, () => Promise<{ default: (speed: number) => Promise<void> }>> = {
+        ansible: () => import('../../../src/modules/ansible'),
+        bootlog: () => import('../../../src/modules/bootlog'),
+        botnet: () => import('../../../src/modules/botnet'),
+        bruteforce: () => import('../../../src/modules/bruteforce'),
+        cargo: () => import('../../../src/modules/cargo'),
+        cc: () => import('../../../src/modules/cc'),
+        claudeCode: () => import('../../../src/modules/claudeCode'),
+        composer: () => import('../../../src/modules/composer'),
+        cryptomining: () => import('../../../src/modules/cryptomining'),
+        ganache: () => import('../../../src/modules/ganache'),
+        geminiCli: () => import('../../../src/modules/geminiCli'),
+        kernelCompile: () => import('../../../src/modules/kernelCompile'),
+        memdump: () => import('../../../src/modules/memdump'),
+        mkinitcpio: () => import('../../../src/modules/mkinitcpio'),
+        pip: () => import('../../../src/modules/pip'),
+        nextBuild: () => import('../../../src/modules/nextBuild'),
+        rkhunter: () => import('../../../src/modules/rkhunter'),
+        simcity: () => import('../../../src/modules/simcity'),
+        terraform: () => import('../../../src/modules/terraform'),
+    };
+
+    const player = document.querySelector('.fakeact-player') as HTMLElement | null;
+    if (player) {
+        const terminalEl = player.querySelector('[data-terminal]') as HTMLElement;
+        const statusEl = player.querySelector('[data-status]') as HTMLElement | null;
+        const pauseBtn = player.querySelector('[data-action="pause"]') as HTMLButtonElement;
+        const restartBtn = player.querySelector('[data-action="restart"]') as HTMLButtonElement;
+        const fullscreenBtn = player.querySelector('[data-action="fullscreen"]') as HTMLButtonElement;
+        const copyBtn = player.querySelector('[data-action="copy"]') as HTMLButtonElement;
+        const speedGroup = player.querySelector('[data-speed-group]') as HTMLElement;
+        const picker = player.querySelector('[data-picker]') as HTMLElement | null;
+
+        let currentModule = player.getAttribute('data-module') || 'cargo';
+        let currentSpeed = Number(player.getAttribute('data-speed')) || 1;
+        // Module pages are prerendered, so their server-rendered props
+        // cannot see the request query string. Re-read it in the browser
+        // so shared links like /module/cargo?speed=2 actually apply.
+        try {
+            const params = new URLSearchParams(window.location.search);
+            const urlSpeed = Number(params.get('speed'));
+            if ([0.5, 1, 2, 4].includes(urlSpeed)) currentSpeed = urlSpeed;
+            const urlModule = params.get('module') || '';
+            if (window.location.pathname === '/' && urlModule && loaders[urlModule]) {
+                currentModule = urlModule;
             }
-        });
-        (async() => {
-            logoStr.split('\n').forEach((line) => terminal.writeln(line));
-            terminal.writeln(bold(' Press Ctrl + C to exit...'));
+        } catch {
+            // Keep the server-rendered defaults.
+        }
+        let generation = 0;
+        let paused = false;
+        let stopped = false;
+        let terminal: Terminal | null = null;
+        let fitAddon: FitAddon | null = null;
+
+        const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+        const setStatus = (text: string) => {
+            if (statusEl) statusEl.textContent = text;
+        };
+        const setPausedUi = () => {
+            pauseBtn.textContent = paused ? '▶ Resume' : '⏸ Pause';
+            setStatus(paused ? 'Paused' : stopped ? 'Stopped' : 'Playing');
+        };
+        const markSpeedUi = () => {
+            speedGroup.querySelectorAll('[data-speed]').forEach((btn) => {
+                const el = btn as HTMLButtonElement;
+                const active = Number(el.getAttribute('data-speed')) === currentSpeed;
+                el.classList.toggle('border-green-500', active);
+                el.classList.toggle('text-green-400', active);
+                el.classList.toggle('border-gray-700', !active);
+                el.classList.toggle('text-gray-300', !active);
+            });
+        };
+        const markPickerUi = () => {
+            if (!picker) return;
+            picker.querySelectorAll('[data-pick]').forEach((btn) => {
+                const el = btn as HTMLButtonElement;
+                const active = el.getAttribute('data-pick') === currentModule;
+                el.classList.toggle('bg-green-600', active);
+                el.classList.toggle('text-white', active);
+                el.classList.toggle('bg-gray-900', !active);
+                el.classList.toggle('text-gray-300', !active);
+            });
+        };
+        const syncUrl = () => {
+            const url = new URL(window.location.href);
+            url.searchParams.set('speed', String(currentSpeed));
+            if (window.location.pathname === '/') {
+                url.searchParams.set('module', currentModule);
+            }
+            window.history.replaceState(null, '', url);
+        };
+        const shareUrl = () => {
+            const url = new URL(window.location.origin);
+            if (window.location.pathname.startsWith('/module/')) {
+                url.pathname = window.location.pathname;
+            } else {
+                url.pathname = '/';
+                url.searchParams.set('module', currentModule);
+            }
+            url.searchParams.set('speed', String(currentSpeed));
+            return url.toString();
+        };
+
+        const createTerminal = () => {
+            terminalEl.innerHTML = '';
+            terminal = new Terminal({ scrollback: 0 });
+            fitAddon = new FitAddon();
+            (window as any).terminal = terminal;
+            terminal.loadAddon(fitAddon);
+            terminal.loadAddon(new WebLinksAddon());
+            terminal.open(terminalEl);
+            fitAddon.fit();
+            terminal.onKey((e) => {
+                if (e.domEvent.key === 'c' && e.domEvent.ctrlKey) {
+                    stopPlayback();
+                }
+            });
+        };
+
+        const printIntro = () => {
+            if (!terminal) return;
+            logoStr.split('\n').forEach((line) => terminal!.writeln(line));
+            terminal.writeln(chalk.bold(' Playing in your browser — simulated output only.'));
             terminal.writeln('');
-            while(true) {
-                const runModule = moduleMap[module];
-                if (runModule) {
-                    await runModule();
+        };
+
+        const play = async (gen: number) => {
+            if (!terminal) return;
+            while (generation === gen) {
+                try {
+                    const loader = loaders[currentModule];
+                    if (!loader) {
+                        terminal.writeln(`Module "${currentModule}" is not available in the web player yet.`);
+                        return;
+                    }
+                    const mod = await loader();
+                    // Speed is applied globally inside sleep() via
+                    // window.fakeactSpeed, so always pass 1 here to avoid
+                    // double-scaling modules that divide by speedFactor.
+                    await mod.default(1);
+                } catch (err) {
+                    // Cancelled by a switch/restart/stop, or the run ended.
+                    break;
                 }
             }
-        })()
+        };
+
+        const startPlayback = async () => {
+            generation += 1;
+            const gen = generation;
+            stopped = false;
+            paused = false;
+            (window as any).fakeactPaused = false;
+            (window as any).fakeactSpeed = currentSpeed;
+            createTerminal();
+            printIntro();
+            setPausedUi();
+            await play(gen);
+        };
+
+        const stopPlayback = () => {
+            generation += 1;
+            (window as any).fakeactRunCancelled = true;
+            stopped = true;
+            paused = false;
+            (window as any).fakeactPaused = false;
+            if (terminal) terminal.writeln(chalk.bold(' Stopped. Press Restart to play again.'));
+            setPausedUi();
+        };
+
+        const restartPlayback = async () => {
+            generation += 1;
+            (window as any).fakeactRunCancelled = true;
+            // Give the in-flight run a moment to abort at its next sleep
+            // (checked every 50ms) before replacing the terminal.
+            await delay(150);
+            (window as any).fakeactRunCancelled = false;
+            await startPlayback();
+        };
+
+        pauseBtn.addEventListener('click', () => {
+            if (stopped) {
+                restartPlayback();
+                return;
+            }
+            paused = !paused;
+            (window as any).fakeactPaused = paused;
+            setPausedUi();
+        });
+        restartBtn.addEventListener('click', () => restartPlayback());
+        fullscreenBtn.addEventListener('click', () => {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            } else if (player.requestFullscreen) {
+                player.requestFullscreen();
+            }
+        });
+        document.addEventListener('fullscreenchange', () => {
+            fitAddon?.fit();
+            fullscreenBtn.textContent = document.fullscreenElement ? '⛶ Exit fullscreen' : '⛶ Fullscreen';
+        });
+        copyBtn.addEventListener('click', async () => {
+            const link = shareUrl();
+            const original = copyBtn.textContent;
+            try {
+                await navigator.clipboard.writeText(link);
+            } catch {
+                const ta = document.createElement('textarea');
+                ta.value = link;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                ta.remove();
+            }
+            copyBtn.textContent = '✓ Copied!';
+            setTimeout(() => {
+                copyBtn.textContent = original;
+            }, 2000);
+        });
+        speedGroup.querySelectorAll('[data-speed]').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                currentSpeed = Number((btn as HTMLButtonElement).getAttribute('data-speed')) || 1;
+                (window as any).fakeactSpeed = currentSpeed;
+                markSpeedUi();
+                syncUrl();
+            });
+        });
+        if (picker) {
+            picker.querySelectorAll('[data-pick]').forEach((btn) => {
+                btn.addEventListener('click', async () => {
+                    const next = (btn as HTMLButtonElement).getAttribute('data-pick');
+                    if (!next || next === currentModule) return;
+                    currentModule = next;
+                    markPickerUi();
+                    syncUrl();
+                    await restartPlayback();
+                });
+            });
+        }
+        window.addEventListener('resize', () => fitAddon?.fit());
+
+        (window as any).fakeactSpeed = currentSpeed;
+        (window as any).fakeactPaused = false;
+        (window as any).fakeactRunCancelled = false;
+        markSpeedUi();
+        markPickerUi();
+        startPlayback();
     }
 </script>
 
 <style is:global>
-    .command-line-terminal .xterm .xterm-viewport {
+    .fakeact-player .xterm .xterm-viewport {
         overflow: hidden !important;
-        background-color: transparent !important;
     }
 </style>

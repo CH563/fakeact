@@ -12,7 +12,33 @@ export function chooseMultipleRandom<T>(arr: T[], n: number): T[] {
 }
 
 export async function sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+    // In Node (the CLI) keep the original behaviour exactly.
+    if (typeof window === 'undefined') {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+    // In the browser, the web player controls playback through three
+    // window flags set by CommandLine.astro:
+    // - fakeactSpeed: global speed multiplier (default 1)
+    // - fakeactPaused: when true, time stops advancing
+    // - fakeactRunCancelled: when true, the current run aborts promptly
+    const win = window as any;
+    const speed =
+        typeof win.fakeactSpeed === 'number' && win.fakeactSpeed > 0
+            ? win.fakeactSpeed
+            : 1;
+    let remaining = ms / speed;
+    while (remaining > 0) {
+        if (win.fakeactRunCancelled) {
+            throw new Error('fakeact-run-cancelled');
+        }
+        if (win.fakeactPaused) {
+            await new Promise((resolve) => setTimeout(resolve, 100));
+            continue;
+        }
+        const step = Math.min(50, remaining);
+        await new Promise((resolve) => setTimeout(resolve, step));
+        remaining -= step;
+    }
 }
 
 // Helper function to generate random hex strings

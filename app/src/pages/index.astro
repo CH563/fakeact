@@ -1,8 +1,15 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Footer from '../components/footer.astro';
+import CommandLine from '../components/CommandLine.astro';
+import shoteasy from '../assets/shoteasy.svg';
+import fakemail from '../assets/fakemail.svg';
 import { MODULE_LIST } from '../utils/moduleCatalog';
 const modules = MODULE_LIST;
+const requestedModule = Astro.url.searchParams.get('module') ?? '';
+const initialModule = MODULE_LIST.includes(requestedModule) ? requestedModule : 'cargo';
+const requestedSpeed = Number(Astro.url.searchParams.get('speed'));
+const initialSpeed = [0.5, 1, 2, 4].includes(requestedSpeed) ? requestedSpeed : 1;
 ---
 
 <Layout>
@@ -10,7 +17,7 @@ const modules = MODULE_LIST;
         class='p-5'
         style=`background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(148 163 184 / 0.05)'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e")`
     >
-        <div class='container mx-auto max-w-xl'>
+        <div class='container mx-auto max-w-3xl'>
             <div class='pt-20'>
                 <img class='mx-auto w-10' src='/favicon.svg' alt='Fakeact' title="Fakeact" />
             </div>
@@ -25,7 +32,18 @@ const modules = MODULE_LIST;
                 pretending to be busy to make you look professional, but not
                 doing anything
             </p>
-            <div class='text-gray-200 text-sm text-center'>Installation</div>
+            <p class='text-green-400 text-sm text-center mb-6'>
+                ▶ Already playing below — no install, no sign-up. Pick a module,
+                go fullscreen, or copy the link to share it.
+            </p>
+            <div class='text-left'>
+                <CommandLine module={initialModule} initialSpeed={initialSpeed} showPicker modules={modules} />
+            </div>
+            <p class='text-gray-500 text-xs text-center mt-3 mb-8'>
+                Tip: open a module below for its own playable page, or share this page
+                with <code>?module={initialModule}&amp;speed={initialSpeed}</code> in the URL.
+            </p>
+            <div class='text-gray-200 text-sm text-center'>Prefer the CLI? Installation</div>
             <div class='text-center'>
                 <div
                     class='inline-block border border-gray-800 font-semibold my-2 bg-gray-900 rounded-md px-4 py-1 bg-gradient-to-b from-transparent to-gray-950 hover:from-white/5'
@@ -73,15 +91,13 @@ const modules = MODULE_LIST;
                 >
             </div>
             <h2 class='border-gray-600 font-semibold text-xl pt-16 pb-4'>
-                How dose it work?
+                How does it work?
             </h2>
             <ul class='list-none text-md text-gray-500 grid gap-1 pb-6'>
-                <li>
-                    1. Run the command line tool <code>fakeact</code> in the terminal
-                </li>
-                <li>2. Select the module you want to run</li>
-                <li>3. Enjoy the fake logs output</li>
-                <li>4. Press <code>Ctrl + C</code> to exit</li>
+                <li>1. Open this page — a module is already playing above</li>
+                <li>2. Pick a module, change the speed, or go fullscreen</li>
+                <li>3. Copy the link to share that exact module and speed</li>
+                <li>4. Press <code>Ctrl + C</code> to stop playback</li>
                 <li>
                     5. Just fake log printout, no data is processed or installed
                 </li>
@@ -150,12 +166,6 @@ const modules = MODULE_LIST;
     "operatingSystem": "ALL",
     "applicationCategory": "BrowserApplication",
     "browserRequirements": "requires HTML5 support",
-    "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.6",
-        "ratingCount": "3982",
-        "bestRating": "5"
-    },
     "offers": {
         "@type": "Offer",
         "price": "0",

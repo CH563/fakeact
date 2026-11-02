@@ -58,6 +58,10 @@ export default {
         shortName: 'Claude Code Simulator',
         category: 'AI Tools',
     },
+    claudeCode: {
+        title: 'Claude Code CLI Simulator | AI Coding Assistant Log Generator',
+        desc: 'Simulate Claude Code AI assistant logs including tool calls, file edits, and terminal commands. Perfect for AI coding workflow demos and integration testing.',
+    },
     composer: {
         title: 'PHP Composer Log Generator - Package Installation Simulator | Fakeact',
         desc: 'Generate realistic PHP Composer install and update logs. Simulate dependency resolution, package downloads, and autoloader generation for Laravel and PHP project demos.',
@@ -176,6 +180,10 @@ export default {
         keywords: 'ganache log generator, ethereum development, blockchain simulator, smart contract testing, web3 development, truffle suite demo, eth local node',
         shortName: 'Ganache Simulator',
         category: 'Blockchain Tools',
+    },
+    geminiCli: {
+        title: 'Gemini CLI Log Simulator | Google AI Coding Assistant Demo',
+        desc: 'Simulate Gemini CLI terminal logs with read_file, run_shell_command, and Gemini API responses. Perfect for Google AI coding tool demos and integration testing.',
     },
     pip: {
         title: 'Python pip Install Log Generator - Package Manager Simulator | Fakeact',

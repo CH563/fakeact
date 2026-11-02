@@ -39,11 +39,11 @@ const MODULE_TAGS: Record<string, string[]> = {
     bruteforce: ['hash lists', 'rainbow tables', 'match progress', 'cracked pairs'],
     cargo: ['crate downloads', 'compile steps', 'release builds', 'dependency graphs'],
     cc: ['compiler flags', 'object files', 'link stage', 'include paths'],
-    claudeCode: ['tool calls', 'file reads', 'edits', 'terminal commands'],
+    claudeCode: ['tool calls', 'file reads', 'file edits', 'terminal commands'],
     composer: ['package installs', 'dependency resolve', 'lock files', 'autoload build'],
     cryptomining: ['hashrate stats', 'gpu workers', 'stratum jobs', 'share submits'],
     ganache: ['local accounts', 'rpc calls', 'transaction flow', 'block mining'],
-    geminiCli: ['REPL', 'read_file', 'run_shell_command', 'web_fetch', 'Gemini API'],
+    geminiCli: ['REPL', 'read_file', 'run_shell_command', 'web_fetch', 'Gemini API', 'AI summaries'],
     kernelCompile: ['arch builds', 'VMLINUX link', 'object steps', 'bzImage output'],
     memdump: ['memory addresses', 'hex bytes', 'region patterns', 'ascii columns'],
     mkinitcpio: ['initramfs build', 'hook sequence', 'firmware warnings', 'compression output'],
@@ -238,7 +238,7 @@ export const buildFaq = (moduleName: string): ModuleFaqItem[] => [
     },
     {
         question: `Can I control the speed of ${moduleName}?`,
-        answer: 'Yes. The CLI supports speed and repeat options, and the web page can be refreshed.',
+        answer: 'Yes. Use the speed controls above the web player, or the CLI speed and repeat options.',
     },
     {
         question: `Does ${moduleName} change my system?`,

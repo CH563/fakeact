@@ -49,5 +49,5 @@ export default {
     nextBuild,
     ganache,
     geminiCli,
-    pip
+    pip,
 };
