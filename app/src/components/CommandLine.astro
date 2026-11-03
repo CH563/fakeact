@@ -1,9 +1,12 @@
 ---
+import { getModuleDisplayName } from '../utils/moduleMoreAbout';
+
 export interface Props {
     module?: string;
     initialSpeed?: number;
     showPicker?: boolean;
     modules?: string[];
+    autoplayNext?: boolean;
 }
 
 const {
@@ -11,6 +14,7 @@ const {
     initialSpeed = 1,
     showPicker = false,
     modules = [],
+    autoplayNext = false,
 } = Astro.props;
 
 const speeds = [0.5, 1, 2, 4];
@@ -21,6 +25,7 @@ const speeds = [0.5, 1, 2, 4];
     data-module={initialModule}
     data-speed={initialSpeed}
     data-show-picker={showPicker ? 'true' : 'false'}
+    data-autoplay={autoplayNext ? 'true' : 'false'}
 >
     <div class="flex flex-wrap items-center gap-2 border-b border-gray-800 px-3 py-2 text-xs">
         <button type="button" data-action="pause" class="rounded border border-gray-700 px-3 py-1.5 font-semibold text-gray-200 hover:bg-gray-800">
@@ -54,6 +59,15 @@ const speeds = [0.5, 1, 2, 4];
         <button type="button" data-action="copy" class="rounded border border-gray-700 px-3 py-1.5 font-semibold text-gray-200 hover:bg-gray-800">
             🔗 Copy link
         </button>
+        <button type="button" data-action="autoplay" class="rounded border border-gray-700 px-3 py-1.5 font-semibold text-gray-200 hover:bg-gray-800">
+            {autoplayNext ? '🔁 Autoplay: On' : '🔁 Autoplay: Off'}
+        </button>
+        <button type="button" data-action="copy-log" class="rounded border border-gray-700 px-3 py-1.5 font-semibold text-gray-200 hover:bg-gray-800">
+            📋 Copy log
+        </button>
+        <button type="button" data-action="download-log" class="rounded border border-gray-700 px-3 py-1.5 font-semibold text-gray-200 hover:bg-gray-800">
+            ⬇ Download log
+        </button>
         <span class="ml-auto hidden text-gray-500 sm:inline" data-status>Playing</span>
     </div>
 
@@ -71,7 +85,7 @@ const speeds = [0.5, 1, 2, 4];
                                 : 'bg-gray-900 text-gray-300',
                         ]}
                     >
-                        {name}
+                        {getModuleDisplayName(name)}
                     </button>
                 ))}
             </div>
@@ -144,6 +158,9 @@ const speeds = [0.5, 1, 2, 4];
         const restartBtn = player.querySelector('[data-action="restart"]') as HTMLButtonElement;
         const fullscreenBtn = player.querySelector('[data-action="fullscreen"]') as HTMLButtonElement;
         const copyBtn = player.querySelector('[data-action="copy"]') as HTMLButtonElement;
+        const autoplayBtn = player.querySelector('[data-action="autoplay"]') as HTMLButtonElement;
+        const copyLogBtn = player.querySelector('[data-action="copy-log"]') as HTMLButtonElement;
+        const downloadLogBtn = player.querySelector('[data-action="download-log"]') as HTMLButtonElement;
         const speedGroup = player.querySelector('[data-speed-group]') as HTMLElement;
         const picker = player.querySelector('[data-picker]') as HTMLElement | null;
 
@@ -166,6 +183,7 @@ const speeds = [0.5, 1, 2, 4];
         let generation = 0;
         let paused = false;
         let stopped = false;
+        let autoplay = player.getAttribute('data-autoplay') === 'true';
         let terminal: Terminal | null = null;
         let fitAddon: FitAddon | null = null;
 
@@ -220,7 +238,7 @@ const speeds = [0.5, 1, 2, 4];
 
         const createTerminal = () => {
             terminalEl.innerHTML = '';
-            terminal = new Terminal({ scrollback: 0 });
+            terminal = new Terminal({ scrollback: 2000 });
             fitAddon = new FitAddon();
             (window as any).terminal = terminal;
             terminal.loadAddon(fitAddon);
@@ -255,6 +273,18 @@ const speeds = [0.5, 1, 2, 4];
                     // window.fakeactSpeed, so always pass 1 here to avoid
                     // double-scaling modules that divide by speedFactor.
                     await mod.default(1);
+                    // The module finished. With autoplay on, roll on to the
+                    // next module instead of replaying the same one, so a
+                    // visitor keeps discovering new logs without clicking.
+                    if (autoplay && generation === gen) {
+                        const names = Object.keys(loaders);
+                        const idx = names.indexOf(currentModule);
+                        currentModule = names[(idx + 1) % names.length];
+                        markPickerUi();
+                        syncUrl();
+                        createTerminal();
+                        printIntro();
+                    }
                 } catch (err) {
                     // Cancelled by a switch/restart/stop, or the run ended.
                     break;
@@ -333,6 +363,68 @@ const speeds = [0.5, 1, 2, 4];
             setTimeout(() => {
                 copyBtn.textContent = original;
             }, 2000);
+        });
+        const setAutoplayUi = () => {
+            autoplayBtn.textContent = autoplay ? '🔁 Autoplay: On' : '🔁 Autoplay: Off';
+        };
+        autoplayBtn.addEventListener('click', () => {
+            autoplay = !autoplay;
+            setAutoplayUi();
+        });
+        const getLogText = () => {
+            if (!terminal) return '';
+            const buf = terminal.buffer.active;
+            const lines: string[] = [];
+            for (let i = 0; i < buf.length; i++) {
+                const line = buf.getLine(i);
+                if (line) lines.push(line.translateToString(true));
+            }
+            while (lines.length > 0 && lines[lines.length - 1].trim() === '') {
+                lines.pop();
+            }
+            return lines.join('\n');
+        };
+        const flashBtn = (btn: HTMLButtonElement, text: string) => {
+            const original = btn.textContent;
+            btn.textContent = text;
+            setTimeout(() => {
+                btn.textContent = original;
+            }, 2000);
+        };
+        copyLogBtn.addEventListener('click', async () => {
+            const text = getLogText();
+            if (!text) {
+                flashBtn(copyLogBtn, 'Nothing yet');
+                return;
+            }
+            try {
+                await navigator.clipboard.writeText(text);
+            } catch {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                ta.remove();
+            }
+            flashBtn(copyLogBtn, '✓ Copied!');
+        });
+        downloadLogBtn.addEventListener('click', () => {
+            const text = getLogText();
+            if (!text) {
+                flashBtn(downloadLogBtn, 'Nothing yet');
+                return;
+            }
+            const blob = new Blob([text + '\n'], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `fakeact-${currentModule}.log`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+            flashBtn(downloadLogBtn, '✓ Saved!');
         });
         speedGroup.querySelectorAll('[data-speed]').forEach((btn) => {
             btn.addEventListener('click', () => {

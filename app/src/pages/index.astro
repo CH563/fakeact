@@ -5,6 +5,7 @@ import CommandLine from '../components/CommandLine.astro';
 import shoteasy from '../assets/shoteasy.svg';
 import fakemail from '../assets/fakemail.svg';
 import { MODULE_LIST } from '../utils/moduleCatalog';
+import { getModuleDisplayName } from '../utils/moduleMoreAbout';
 const modules = MODULE_LIST;
 const requestedModule = Astro.url.searchParams.get('module') ?? '';
 const initialModule = MODULE_LIST.includes(requestedModule) ? requestedModule : 'cargo';
@@ -33,11 +34,12 @@ const initialSpeed = [0.5, 1, 2, 4].includes(requestedSpeed) ? requestedSpeed : 
                 doing anything
             </p>
             <p class='text-green-400 text-sm text-center mb-6'>
-                ▶ Already playing below — no install, no sign-up. Pick a module,
-                go fullscreen, or copy the link to share it.
+                ▶ Already playing below — no install, no sign-up. It autoplays
+                through modules; pick one, go fullscreen, copy the log, or
+                share the link.
             </p>
             <div class='text-left'>
-                <CommandLine module={initialModule} initialSpeed={initialSpeed} showPicker modules={modules} />
+                <CommandLine module={initialModule} initialSpeed={initialSpeed} showPicker modules={modules} autoplayNext />
             </div>
             <p class='text-gray-500 text-xs text-center mt-3 mb-8'>
                 Tip: open a module below for its own playable page, or share this page
@@ -80,7 +82,7 @@ const initialSpeed = [0.5, 1, 2, 4].includes(requestedSpeed) ? requestedSpeed : 
                             class='justify-center inline-block text-center rounded-sm text-sm font-semibold py-3 px-4 bg-slate-800 text-white hover:bg-slate-700'
                             href={`/module/${module}`}
                         >
-                            {module}
+                            {getModuleDisplayName(module)}
                         </a>
                     ))
                 }
@@ -95,8 +97,8 @@ const initialSpeed = [0.5, 1, 2, 4].includes(requestedSpeed) ? requestedSpeed : 
             </h2>
             <ul class='list-none text-md text-gray-500 grid gap-1 pb-6'>
                 <li>1. Open this page — a module is already playing above</li>
-                <li>2. Pick a module, change the speed, or go fullscreen</li>
-                <li>3. Copy the link to share that exact module and speed</li>
+                <li>2. Pick a module, change the speed, go fullscreen, or let autoplay roll through modules</li>
+                <li>3. Copy the link to share that exact module and speed, or copy/download the log</li>
                 <li>4. Press <code>Ctrl + C</code> to stop playback</li>
                 <li>
                     5. Just fake log printout, no data is processed or installed
