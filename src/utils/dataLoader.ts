@@ -70,43 +70,46 @@ async function loadDataFile(filename: string): Promise<string[]> {
         }
 };
 
-const getVersions = (data: any) => {
-    const versions: string[] = [];
-    Object.keys(data).map(key => {
-        if (key !== 'AAindex' && key !== '1cd36ffe') {
-            versions.push(data[key])
-        }
-        return key;
-    });
-    return versions;
-}
-
-const loadCsvFile = (filename: string): Promise<CSVFILE[]> => new Promise(async (resolve, reject) => {
-    const results: CSVFILE[] = [];
-    if (EnvDetector.isNode()) {
-        const path = await import('path');
-        const fs = await import('fs');
-        const csv = (await import('csv-parser')).default;
-        const filePath = path.join(__dirname, '../..', 'data', filename);
-        fs.createReadStream(filePath)
-            .pipe(csv()).on('data', (data) => {
-                results.push({
-                    name: data['AAindex'] || 'Revise',
-                    id: data['1cd36ffe'] || '295af30f',
-                    versions: getVersions(data),
-                });
-        })
-        .on('end', () => {
-            resolve(results);
-        })
-        .on('error', (error) => {
-            console.error('Error reading CSV file:', error);
-            resolve(results);
+// NOTE: julia.csv contains zero double-quote characters and no escaped
+// commas, so a hand-written split(',') parse is equivalent to csv-parser
+// here — and it keeps the csv-parser dependency out of the client bundle.
+// Columns: name, id, then one version per remaining column.
+const parseCsvRows = (content: string): CSVFILE[] => {
+    const rows: CSVFILE[] = [];
+    const lines = content.trim().split('\n').slice(1); // skip header row
+    for (const line of lines) {
+        const cols = line.split(',');
+        if (cols.length < 3) continue;
+        rows.push({
+            name: cols[0],
+            id: cols[1],
+            versions: cols.slice(2).filter(Boolean),
         });
-    } else {
-        resolve(results);
     }
-})
+    return rows;
+};
+
+const loadCsvFile = async (filename: string): Promise<CSVFILE[]> => {
+    try {
+        if (EnvDetector.isNode()) {
+            const path = await import('path');
+            const fs = await import('fs');
+            const { fileURLToPath } = await import('url');
+            const __filename = fileURLToPath(import.meta.url);
+            const __dirname = path.dirname(__filename);
+            const filePath = path.join(__dirname, '../..', 'data', filename);
+            const content = await fs.promises.readFile(filePath, 'utf8');
+            return parseCsvRows(content);
+        } else {
+            const response = await fetch(`https://ch563.s3.ap-southeast-1.amazonaws.com/data/${filename}`);
+            const content = await response.text();
+            return parseCsvRows(content);
+        }
+    } catch (error) {
+        console.error(`Error loading ${filename}:`, error.message);
+        return [];
+    }
+};
 
 export async function loadData(name: string): Promise<string[]> {
     const data = DATA_FILES[name];

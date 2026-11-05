@@ -1409,10 +1409,12 @@ const displayName: Record<string, string> = {
     rkhunter: 'rkhunter',
     simcity: 'SimCity',
     terraform: 'Terraform',
+    dockerBuild: 'Docker build',
     dockerImageRm: 'Docker image rm',
     download: 'Download',
     npm: 'npm',
     weblog: 'Web server log',
+    julia: 'Julia',
 };
 
 export const MODULE_MORE_ABOUT: Record<string, ModuleMoreAbout> = {

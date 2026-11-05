@@ -1,4 +1,4 @@
-import ora from 'ora';
+import { oraFun, writeLine, write } from '../utils/environment.js';
 import chalk from 'chalk';
 import { getRandomInt, sleep, generateHexString } from '../utils/helpers.js';
 import { loadCsv } from '../utils/dataLoader.js';
@@ -59,19 +59,19 @@ async function printBanner(): Promise<void> {
  _/ |\\__'_|_|_|\\__'_|  |  Fedora 35 build
 |__/                   |
 `;
-    console.log(banner);
+    writeLine(banner);
 }
 
 async function printJuliaPrompt(): Promise<void> {
-    process.stdout.write(chalk.green.bold('julia> '));
+    write(chalk.green.bold('julia> '));
 }
 
 async function printPkgPrompt(project: string): Promise<void> {
-    process.stdout.write(chalk.blue.bold(`(${project}) pkg> `));
+    write(chalk.blue.bold(`(${project}) pkg> `));
 }
 
 function logAction(action: string, message: string) {
-    console.log(`${chalk.green.bold(action.padStart(12))} ${message}`);
+    writeLine(`${chalk.green.bold(action.padStart(12))} ${message}`);
 }
 
 async function installPackages(packages: PackageList[]): Promise<void> {
@@ -86,7 +86,7 @@ async function installPackages(packages: PackageList[]): Promise<void> {
             logAction('Installing', packageAndVersion);
             await sleep(getRandomInt(250, 1000));
             // Move cursor up and clear line
-            process.stdout.write('\x1B[1A\x1B[2K');
+            write('\x1B[1A\x1B[2K');
         } else {
             await sleep(getRandomInt(10, 200));
         }
@@ -102,10 +102,9 @@ async function downloadArtifacts(artifacts: PackageList[]): Promise<void> {
         await sleep(getRandomInt(100, 150));
 
         const bar = new ProgressBar(10000);
-        const spinner = ora({
-            text: `${chalk.cyan.bold('Downloading'.padStart(15))} ${bar}`,
-            spinner: 'line'
-        }).start();
+        const spinner = await oraFun();
+        spinner.text = `${chalk.cyan.bold('Downloading'.padStart(15))} ${bar}`;
+        spinner.start();
 
         while (bar.toString().includes('100%') === false) {
             const add = Math.min(getRandomInt(0, 500), 10000);
@@ -117,7 +116,7 @@ async function downloadArtifacts(artifacts: PackageList[]): Promise<void> {
         spinner.stop();
         await sleep(getRandomInt(100, 200));
         // Move cursor up and clear line
-        process.stdout.write('\x1B[1A\x1B[2K');
+        write('\x1B[1A\x1B[2K');
         logAction('Downloaded', `artifact: ${artifact.name}`);
     }
 }
@@ -146,11 +145,11 @@ async function reportPackages(packages: PackageList[]) {
         const pkgId = chalk.gray(`  [${pkg.id.substring(0, 8)}] `)
         const randomBool = Math.random() < 0.75;  // 随机概率
         if (pkg.versions.length > 1 && randomBool) {
-            console.log(pkgId + chalk.yellow(`↑ ${pkg.name} ${pkg.versions[0]} ⇒ ${pkg.versions[1]}`));
+            writeLine(pkgId + chalk.yellow(`↑ ${pkg.name} ${pkg.versions[0]} ⇒ ${pkg.versions[1]}`));
         } else if (Math.random() < 0.9) {
-            console.log(pkgId + chalk.green(`+ ${pkg.name} ${pkg.versions[0]}`));
+            writeLine(pkgId + chalk.green(`+ ${pkg.name} ${pkg.versions[0]}`));
         } else {
-            console.log(pkgId + chalk.red(`- ${pkg.name} ${pkg.versions[0]}`));
+            writeLine(pkgId + chalk.red(`- ${pkg.name} ${pkg.versions[0]}`));
         }
         await sleep(getRandomInt(10, 100));
     }
@@ -164,10 +163,9 @@ async function buildArtifacts(artifacts: PackageList[]) {
         logAction('Building', `${packageAndVersion}`);
         // 这里可以进一步模拟进度条逻辑
         const bar = new ProgressBar(10000);
-        const spinner = ora({
-            text: `${chalk.cyan.bold('Progress'.padStart(15))} ${bar}`,
-            spinner: 'line'
-        }).start();
+        const spinner = await oraFun();
+        spinner.text = `${chalk.cyan.bold('Progress'.padStart(15))} ${bar}`;
+        spinner.start();
 
         while (bar.toString().includes('100%') === false) {
             const add = Math.min(getRandomInt(0, 500), 10000);
@@ -184,15 +182,14 @@ async function buildArtifacts(artifacts: PackageList[]) {
 async function precompile(packages: PackageList[]) {
     logAction("Precompiling", "project...");
     // for (const pkg of packages) {
-    //     console.log(`Precompiling ${pkg.name}`);
+    //     writeLine(`Precompiling ${pkg.name}`);
     //     await this.sleep(50);  // 模拟预编译过程
     // }
     const tt = new Date().getSeconds();
     const bar = new ProgressBar(packages.length);
-    const spinner = ora({
-        text: `${chalk.cyan.bold('Progress'.padStart(15))} ${bar}`,
-        spinner: 'line'
-    }).start();
+    const spinner = await oraFun();
+    spinner.text = `${chalk.cyan.bold('Progress'.padStart(15))} ${bar}`;
+    spinner.start();
 
     while (bar.toString().includes('100%') === false) {
         const add = Math.min(getRandomInt(0, packages.length / 4), packages.length);
@@ -202,13 +199,13 @@ async function precompile(packages: PackageList[]) {
     }
 
     spinner.stop();
-    console.log(`  ${packages.length} dependencies successfully precompiled in ${new Date().getSeconds() - tt} seconds (${getRandomInt(10, 500)} already precompiled)`);
+    writeLine(`  ${packages.length} dependencies successfully precompiled in ${new Date().getSeconds() - tt} seconds (${getRandomInt(10, 500)} already precompiled)`);
 }
 
 async function gc() {
     await sleep(getRandomInt(50, 250));
 
-    console.log(`${chalk.cyan.bold('[ Info:"')} We haven't cleaned this depot up for a bit, running Pkg.gc()...`);
+    writeLine(`${chalk.cyan.bold('[ Info:"')} We haven't cleaned this depot up for a bit, running Pkg.gc()...`);
     await sleep(getRandomInt(100, 250));
     
     logAction('Active', `manifest files: ${getRandomInt(1, 10)} found`);
@@ -242,25 +239,25 @@ async function julia(speedFactor: number = 1): Promise<void> {
     // Julia startup
     await printBanner();
     await sleep(getRandomInt(50, 150));
-    console.log();
+    writeLine();
     await printJuliaPrompt();
 
     // Wait for user input
     await sleep(getRandomInt(500, 2500));
 
     // Enter pkg mode
-    process.stdout.write('\x1B[2K'); // Clear line
+    write('\x1B[2K'); // Clear line
     await printPkgPrompt(project);
 
     // Wait for user input
     await sleep(getRandomInt(500, 1500));
 
     // Type "update" and press enter
-    process.stdout.write('up');
+    write('up');
     await sleep(getRandomInt(100, 500));
-    process.stdout.write('date');
+    write('date');
     await sleep(getRandomInt(500, 1500));
-    console.log();
+    writeLine();
 
     // Package update process
     await sleep(getRandomInt(200, 1000));
@@ -292,15 +289,15 @@ async function julia(speedFactor: number = 1): Promise<void> {
     await sleep(getRandomInt(50, 250));
 
     // Exit pkg mode
-    console.log();
+    writeLine();
     await printPkgPrompt(project);
     await sleep(getRandomInt(500, 5000));
 
-    process.stdout.write('\x1B[2K'); // Clear line
+    write('\x1B[2K'); // Clear line
     await printJuliaPrompt();
     await sleep(getRandomInt(1000, 7000));
 
-    console.log();
+    writeLine();
 }
 julia.signature = 'julia --threads auto --project .';
 export default julia;

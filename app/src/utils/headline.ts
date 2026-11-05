@@ -18,7 +18,7 @@ export default {
     },
     bootlog: {
         title: 'Linux Boot Log Generator - Simulate dmesg & Kernel Startup Logs | Fakeact',
-        desc: 'Generate realistic Linux boot logs including dmesg output, kernel initialization, and systemd startup sequences. Perfect for system administration training and log parser testing.',
+        desc: 'Free, runs instantly in your browser — no install, no signup. Generate realistic Linux boot logs including dmesg output, kernel initialization, and systemd startup sequences. Perfect for system administration training and log parser testing.',
         keywords: 'linux boot log generator, dmesg simulator, kernel startup logs, systemd boot logs, linux system logs, boot sequence simulator, fake dmesg output',
         shortName: 'Boot Log Generator',
         category: 'System Tools',
@@ -32,7 +32,7 @@ export default {
     },
     bruteforce: {
         title: 'Brute Force Attack Log Generator - Security Testing & IDS Development | Fakeact',
-        desc: 'Create realistic brute force and password cracking logs for security testing. Simulate rainbow table attacks, hash cracking, and failed login attempts for IDS/SIEM development.',
+        desc: 'Free online simulator — safe, no real cracking, runs in your browser. Create realistic brute force and password cracking logs for security testing. Simulate rainbow table attacks, hash cracking, and failed login attempts for IDS/SIEM development.',
         keywords: 'brute force log generator, password cracking simulator, security testing tool, ids development, hash cracking logs, rainbow table simulation, penetration testing',
         shortName: 'Brute Force Simulator',
         category: 'Security Tools',
@@ -57,10 +57,6 @@ export default {
         keywords: 'claude code simulator, ai coding assistant, cursor ai logs, anthropic claude demo, ai tool calls, code editing simulation, llm coding assistant',
         shortName: 'Claude Code Simulator',
         category: 'AI Tools',
-    },
-    claudeCode: {
-        title: 'Claude Code CLI Simulator | AI Coding Assistant Log Generator',
-        desc: 'Simulate Claude Code AI assistant logs including tool calls, file edits, and terminal commands. Perfect for AI coding workflow demos and integration testing.',
     },
     composer: {
         title: 'PHP Composer Log Generator - Package Installation Simulator | Fakeact',
@@ -112,7 +108,7 @@ export default {
         category: 'System Tools',
     },
     memdump: {
-        title: 'Memory Dump Log Generator - Hex Dump & Forensics Simulator | Fakeact',
+        title: 'Memdump - Memory Dump Log Generator - Hex Dump & Forensics Simulator | Fakeact',
         desc: 'Create realistic memory dump and hexdump output for debugging and forensics training. Simulate memory analysis with address ranges, hex bytes, and ASCII columns.',
         keywords: 'memory dump generator, hexdump simulator, forensics tool, debugging output, memory analysis demo, crash dump simulation, gdb memory examination',
         shortName: 'Memory Dump Simulator',
@@ -180,10 +176,6 @@ export default {
         keywords: 'ganache log generator, ethereum development, blockchain simulator, smart contract testing, web3 development, truffle suite demo, eth local node',
         shortName: 'Ganache Simulator',
         category: 'Blockchain Tools',
-    },
-    geminiCli: {
-        title: 'Gemini CLI Log Simulator | Google AI Coding Assistant Demo',
-        desc: 'Simulate Gemini CLI terminal logs with read_file, run_shell_command, and Gemini API responses. Perfect for Google AI coding tool demos and integration testing.',
     },
     pip: {
         title: 'Python pip Install Log Generator - Package Manager Simulator | Fakeact',

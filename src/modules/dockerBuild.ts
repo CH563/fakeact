@@ -1,7 +1,8 @@
 import chalk from 'chalk';
 import { sleep, getRandomInt, getRandomItem } from '../utils/helpers.js';
 import { loadData } from '../utils/dataLoader.js';
-import runModule from './index.js';
+import { EnvDetector, writeLine, write } from '../utils/environment.js';
+import { MODULE_SIGNATURES } from '../utils/moduleSignatures.js';
 
 // 生成随机十六进制字符串
 function generateHexString(length) {
@@ -37,7 +38,7 @@ async function dockerBuild(speedFactor = 1) {
         let currentSize = 0;
 
         while (currentSize <= targetSize) {
-            process.stdout.write(
+            write(
                 `\rSending build context to Docker daemon  ${currentSize.toFixed(2)}MB`
             );
             
@@ -46,31 +47,30 @@ async function dockerBuild(speedFactor = 1) {
             
             await sleep(getRandomInt(50, 300) / speedFactor);
         }
-        console.log();
+        writeLine();
 
-        // 模拟构建步骤
-        const totalSteps = getRandomInt(30, 100);
-        
+        // 模拟构建步骤（浏览器里截断步数，避免一次播放过长）
+        const totalSteps = EnvDetector.isBrowser() ? getRandomInt(8, 15) : getRandomInt(30, 100);
+
         for (let currentStep = 1; currentStep <= totalSteps; currentStep++) {
-            const moduleName = getRandomItem(Object.keys(runModule).filter(e => e.indexOf('docker') === -1));
-            const instruction = runModule[moduleName]?.signature || getRandomItem(OTHER_COMMANDS);
+            const moduleName = getRandomItem(Object.keys(MODULE_SIGNATURES).filter(e => e.indexOf('docker') === -1));
+            const instruction = MODULE_SIGNATURES[moduleName] || getRandomItem(OTHER_COMMANDS);
             
-            console.log(chalk.cyan(
+            writeLine(chalk.cyan(
                 `\nStep ${currentStep}/${totalSteps} : RUN ${instruction}`
             ));
 
             if (Math.random() > 0.5) {
-                console.log(chalk.gray(' ---> Using cache'));
+                writeLine(chalk.gray(' ---> Using cache'));
                 await sleep(getRandomInt(100, 500) / speedFactor);
             } else {
                 const stepHash = generateHexString(12);
-                console.log(chalk.gray(` ---> Running in ${stepHash}`));
-                console.log();
-                await runModule[moduleName](speedFactor);
+                writeLine(chalk.gray(` ---> Running in ${stepHash}`));
+                writeLine();
                 // 模拟命令执行输出
                 await sleep(getRandomInt(500, 1000) / speedFactor);
             }
-            console.log(chalk.gray(` ---> ${generateHexString(12)}`));
+            writeLine(chalk.gray(` ---> ${generateHexString(12)}`));
         }
 
         // 最终输出
@@ -78,11 +78,11 @@ async function dockerBuild(speedFactor = 1) {
         const imageName = getRandomItem(packages);
         const imageTag = getRandomItem(tags);
 
-        console.log(chalk.green(`\nSuccessfully built ${finalHash}`));
-        console.log(chalk.green(`Successfully tagged ${imageName}:${imageTag}`));
+        writeLine(chalk.green(`\nSuccessfully built ${finalHash}`));
+        writeLine(chalk.green(`Successfully tagged ${imageName}:${imageTag}`));
 
     } catch (error) {
-        console.error(chalk.red('Build failed:', error.message));
+        writeLine(chalk.red(`Build failed: ${error.message}`));
     }
 }
 dockerBuild.signature = 'docker build -t image .';
