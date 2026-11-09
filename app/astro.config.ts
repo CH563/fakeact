@@ -2,12 +2,8 @@ import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
 import cloudflare from '@astrojs/cloudflare';
 import sitemap from '@astrojs/sitemap';
-import { MODULE_LIST } from './src/utils/moduleCatalog';
 
 const site = 'https://fakeact.fun';
-
-// 所有模块动态路由，供 sitemap 使用（与 moduleCatalog MODULE_LIST 一致）
-const modulePages = MODULE_LIST.map((slug) => `${site}/module/${slug}`);
 
 // https://astro.build/config
 export default defineConfig({
@@ -16,9 +12,13 @@ export default defineConfig({
   adapter: cloudflare(),
   integrations: [
     tailwind(),
-    sitemap({
-      customPages: [...modulePages],
-    }),
+    // NOTE: do not pass customPages for modules here. Module pages are
+    // prerendered (see src/pages/module/[module].astro), so @astrojs/sitemap
+    // already discovers them as trailing-slash URLs. Listing them again
+    // without a slash duplicated every module in sitemap-0.xml (51 URLs:
+    // home + 25 modules x2), and each non-slash entry 308-redirects, which
+    // Search Console reported as "Redirect error" (2026-11-09).
+    sitemap(),
   ],
   vite: {
     build: {
